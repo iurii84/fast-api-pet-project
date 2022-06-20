@@ -1,12 +1,23 @@
 from typing import Optional
+from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 # Shared properties
 class ItemBase(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
+    title: Optional[str] = Field(example="My super-pooper title")
+    description: Optional[str] = Field(example="My even greater description")
+    abc: UUID
+
+    # class Config:
+    #     schema_extra = {
+    #         "example": {
+    #             "id": "228",
+    #             "title": "A very nice Item",
+    #             "owner_id": 5678,
+    #         }
+    #     }
 
 
 # Properties to receive on item creation
@@ -27,6 +38,7 @@ class ItemInDBBase(ItemBase):
 
     class Config:
         orm_mode = True
+
 
 
 # Properties to return to client

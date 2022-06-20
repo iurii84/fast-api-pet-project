@@ -1,6 +1,6 @@
-from typing import Any, List
+from typing import Any, List, Union, Dict
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Cookie, Header
 from fastapi.encoders import jsonable_encoder
 from pydantic.networks import EmailStr
 from sqlalchemy.orm import Session
@@ -8,6 +8,9 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas
 from app.api import deps
 from app.core.config import settings
+from app.schemas import Item
+from app.schemas.item import ItemBase
+
 from app.utils import send_new_account_email
 
 router = APIRouter()
@@ -58,6 +61,9 @@ def update_user_me(
     password: str = Body(None),
     full_name: str = Body(None),
     email: EmailStr = Body(None),
+    one_more: int = Body(None, gt=0.0, lt=5),
+    item: ItemBase = Body(None, ),
+    user_agent: Union[str, None] = Header(None),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
