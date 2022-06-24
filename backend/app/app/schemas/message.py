@@ -5,9 +5,15 @@ from pydantic import BaseModel, Field
 
 class MessageBase(BaseModel):
     uuid: str
+
+
+class Message(MessageBase):
     temp: Union[None, float]
     hum: Union[None, float]
 
 
-class Message(MessageBase):
-    pass
+class MessageInDb(Message):
+    id: int
+
+    class Config:
+        orm_mode = True
