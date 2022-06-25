@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
@@ -12,7 +13,8 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
         db_obj = Message(
             uuid=obj_in.uuid,
             temp=obj_in.temp,
-            hum=obj_in.hum
+            hum=obj_in.hum,
+            created=datetime.now()
         )
         db.add(db_obj)
         db.commit()

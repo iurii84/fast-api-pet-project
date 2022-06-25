@@ -1,10 +1,13 @@
+import datetime
+import typing
 from typing import Optional, Union
 
-from pydantic import BaseModel, Field
+import uuid as uuid
+from pydantic import BaseModel, Field, UUID4
 
 
 class MessageBase(BaseModel):
-    uuid: str
+    uuid: UUID4
 
 
 class Message(MessageBase):
@@ -14,6 +17,7 @@ class Message(MessageBase):
 
 class MessageInDb(Message):
     id: int
+    created: datetime.datetime
 
     class Config:
         orm_mode = True
