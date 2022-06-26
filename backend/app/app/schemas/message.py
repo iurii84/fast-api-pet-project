@@ -1,9 +1,8 @@
 import datetime
-import typing
-from typing import Optional, Union
 
-import uuid as uuid
-from pydantic import BaseModel, Field, UUID4
+from typing import Union
+
+from pydantic import BaseModel, UUID4
 
 
 class MessageBase(BaseModel):
