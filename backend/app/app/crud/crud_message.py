@@ -1,4 +1,6 @@
 from datetime import datetime
+from typing import List
+
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
@@ -17,6 +19,14 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def get_multi(
+            self, db: Session, *, skip: int = 0, limit: int = 100, order_by: str = "id"
+    ) -> List[Message]:
+        if order_by == 'id':
+            return db.query(self.model).order_by(Message.id).offset(skip).limit(limit).all()
+        else:
+            db.query(self.model).offset(skip).limit(limit).all()
 
 
 message = CRUDMessage(Message)

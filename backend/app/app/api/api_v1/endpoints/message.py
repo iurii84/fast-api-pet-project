@@ -19,6 +19,7 @@ def send_message(msg: schemas.Message, db: Session = Depends(deps.get_db)) -> An
 @router.get("", response_model=List[schemas.MessageInDb])
 def get_messages(db: Session = Depends(deps.get_db),
                  skip: int = 0,
-                 limit: int = 100) -> Any:
-    messages = crud.message.get_multi(db, skip=skip, limit=limit)
+                 limit: int = 100,
+                 order_by: str = 'id') -> Any:
+    messages = crud.message.get_multi(db, skip=skip, limit=limit, order_by=order_by)
     return messages
