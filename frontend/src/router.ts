@@ -56,6 +56,11 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-profile-password" */ './views/main/profile/UserProfileEditPassword.vue'),
                 },
+                {
+                  path: 'charts',
+                  component: () => import(
+                    /* webpackChunkName: "main-profile-charts" */ './views/main/profile/Charts.vue'),
+                },
               ],
             },
             {

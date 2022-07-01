@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
@@ -21,10 +22,15 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
         return db_obj
 
     def get_multi(
-            self, db: Session, *, skip: int = 0, limit: int = 100, order_by: str = "id"
+            self, db: Session, *, skip: int = 0, limit: int = 100, order_by: str = "id", after_id: int = 0
     ) -> List[Message]:
         if order_by == 'id':
-            return db.query(self.model).order_by(Message.id).offset(skip).limit(limit).all()
+            if after_id > 0:
+                return db.query(self.model).where(self.model.id > after_id).order_by(Message.id).offset(skip). \
+                    limit(limit).all()
+            message_id = db.query(func.max(self.model.id)).first()[0] - 1000
+
+            return db.query(self.model).where(self.model.id > message_id).order_by(Message.id).offset(skip).limit(limit).all()
         else:
             db.query(self.model).offset(skip).limit(limit).all()
 
