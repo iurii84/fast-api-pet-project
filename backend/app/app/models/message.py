@@ -16,3 +16,4 @@ class Message(Base):
     temp = Column(Float, index=True)
     hum = Column(Float, index=True)
     created = Column(postgresql.TIMESTAMP, nullable=False)
+    compress_ratio = Column(Integer, default=0, nullable=True)

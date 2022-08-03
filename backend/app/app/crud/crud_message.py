@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import List
 
-from sqlalchemy import func
+from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
@@ -37,13 +37,80 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
                 if lastMinutes > 0:
                     date_time_now = datetime.now()
                     date_time_result = date_time_now - timedelta(minutes=lastMinutes)
-                    return db.query(self.model).where(self.model.created > date_time_result).order_by(Message.id).\
+                    return db.query(self.model).where(self.model.created > date_time_result).order_by(Message.id). \
                         offset(skip).limit(limit).all()
             message_id = db.query(func.max(self.model.id)).first()[0] - 1000
 
-            return db.query(self.model).where(self.model.id > message_id).order_by(Message.id).offset(skip).limit(limit).all()
+            return db.query(self.model).where(self.model.id > message_id).order_by(Message.id).offset(skip).limit(
+                limit).all()
         else:
             db.query(self.model).offset(skip).limit(limit).all()
+
+    def compress_data(self,
+                      db: Session,
+                      start_date_time,
+                      end_date_time,
+                      for_items_with_compress_ratio,
+                      uuid):
+        db_date_time_delta = db.query(self.model). \
+            where((and_(self.model.created > start_date_time,
+                        self.model.created < end_date_time,
+                        self.model.uuid == uuid,
+                        self.model.compress_ratio == for_items_with_compress_ratio))).all()
+        items_found = len(db_date_time_delta)
+        items_selected_to_compress = None
+
+        even = None
+        if items_found % 2 == 0:
+            even = True
+        else:
+            even = False
+
+        if even:
+            pass
+        else:
+            db_date_time_delta.pop()
+            items_selected_to_compress = len(db_date_time_delta)
+
+        buff = []
+        avg_temp = 0
+        avg_hum = 0
+        avg_time = None
+        for i in db_date_time_delta:
+            buff.append(i)
+            if len(buff) == 2:
+                avg_temp = (buff[0].temp + buff[1].temp) / 2
+                avg_hum = (buff[0].hum + buff[1].hum) / 2
+                delta_time = buff[1].created - buff[0].created
+                avg_time = buff[0].created + delta_time / 2
+
+                msg_1_id = buff[0].id
+                msg_2_id = buff[1].id
+
+                db_update = db.query(self.model). \
+                    filter(Message.id == msg_2_id).\
+                    update({'temp': avg_temp,
+                            'hum': avg_hum,
+                            'created': avg_time,
+                            'compress_ratio': Message.compress_ratio + 1})
+
+                db_delete = db.query(self.model).\
+                    filter(Message.id == msg_1_id).\
+                    delete()
+                db.commit()
+
+                print(f"AVG_TEMP: {avg_temp} ---- AVG_HUM: {avg_hum} ---- AVG_TIME: {avg_time}")
+
+                buff.clear()
+                avg_temp = 0
+                avg_hum = 0
+                avg_time = None
+
+        return {"items_found": items_found,
+                "is_even": even,
+                "items_selected_to_compress": items_selected_to_compress,
+                "db_update": db_update,
+                "db_delete": db_delete}
 
 
 message = CRUDMessage(Message)

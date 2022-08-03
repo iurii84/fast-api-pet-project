@@ -1,3 +1,4 @@
+import datetime
 from typing import Any, List
 
 from fastapi import APIRouter, Depends
@@ -12,7 +13,7 @@ router = APIRouter()
 @router.post("", response_model=schemas.MessageInDb)
 def send_message(msg: schemas.Message, db: Session = Depends(deps.get_db)) -> Any:
     message = crud.message.create(db, obj_in=msg)
-    print(msg)
+    # print(msg)
     return message
 
 
@@ -30,3 +31,18 @@ def get_messages(db: Session = Depends(deps.get_db),
                                       after_id=after_id,
                                       lastMinutes=lastMinutes)
     return messages
+
+
+@router.post("/compress_after_date_time")
+def compress_after_date_time(start_date_time: datetime.datetime,
+                             end_date_time: datetime.datetime,
+                             for_items_with_compress_ratio: int,
+                             uuid: str,
+                             db: Session = Depends(deps.get_db)
+                             ) -> Any:
+    result = crud.message.compress_data(start_date_time=start_date_time,
+                                        end_date_time=end_date_time,
+                                        for_items_with_compress_ratio=for_items_with_compress_ratio,
+                                        uuid=uuid,
+                                        db=db)
+    return result
