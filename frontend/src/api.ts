@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import { IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import {ISensorAvailableList,  IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -11,6 +11,11 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async getSensors() {
+    
+    return axios.get<ISensorAvailableList[]>(`${apiUrl}/api/v1/sensor`);
+    
+  },
   async logInGetToken(username: string, password: string) {
     const params = new URLSearchParams();
     params.append('username', username);

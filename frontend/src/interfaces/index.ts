@@ -21,3 +21,13 @@ export interface IUserProfileCreate {
     is_active?: boolean;
     is_superuser?: boolean;
 }
+
+export interface ISensorAvailableList {
+    id: number;
+    uuid: string;
+    name: string;
+    type: number;
+    location: number;
+    first_occurrence: string;
+    date_registered: string;
+}

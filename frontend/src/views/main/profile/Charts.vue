@@ -4,7 +4,10 @@
       <v-card-title primary-title>
         <div class="headline primary--text">Temperature and humidity data</div>
       </v-card-title>
-      <ChartSettingsModal />
+      <ChartSettingsModal :load_interval=this.selected 
+                          @on-update-chart-after-value-changed="callback_chart_after_value_changed" />
+      
+      <div></div>
       <div class="temp-hum-data-avg-now">
         <span class="temp-data-avg-now">
           Temperature: {{temp}}
@@ -13,7 +16,7 @@
           Humidity: {{hum}}
         </span>
         <span id="chart-settings-button">
-          <b-button v-b-modal.modal-1>Chart settings</b-button>
+          <b-button v-b-modal.temp-hum-settings-modal variant="outline-secondary">Chart settings</b-button>
         </span>
       </div>
       <div class="temp-hum-chart" ref="chartdiv"></div> 
@@ -30,6 +33,8 @@
               { label: '4H', id: 4 * 60},
               { label: '12H', id: 12 * 60},
               { label: '24H', id: 24 * 60},
+              { label: '3d', id: 24 * 60 * 3},
+              { label: '1w', id: 24 * 60 * 7},
       
             ]"
             :clearable=false
@@ -67,6 +72,10 @@ export default {
   },
 
   methods: {
+    callback_chart_after_value_changed(value){
+      this.chart_after_value = value * 1000;
+      this.when_time_interval_changed();
+    },
     
     when_time_interval_changed(){
       //reload data for incremental type chart doesn't work. Need to create another chart entity
@@ -85,7 +94,7 @@ export default {
       //create the new one
       chart.dataSource.url = "http://192.168.88.254/api/v1/message?lastMinutes=" + this.selected,
       chart.dataSource.incremental = true;
-      chart.dataSource.reloadFrequency = 5000;
+      chart.dataSource.reloadFrequency = this.chart_after_value;
       chart.dataSource.keepCount = true;
       //try-catch if missed data. Prevent accessing empty array by id
       chart.dataSource.adapter.add("incrementalParams", function(params, target) {
@@ -140,7 +149,7 @@ export default {
         let len_dataset = dataset.length;
         let buf_temp = 0;
         let buf_hum = 0;
-        if (len_dataset>0){
+        if (len_dataset>0) {
           for (let i=0; i < 10; i++){
             let data_msg = dataset[len_dataset-1-i];
             buf_temp += data_msg['temp'];
@@ -170,7 +179,8 @@ export default {
     return {
       selected: 60,
       temp: 0,
-      hum: 0
+      hum: 0,
+      chart_after_value: 5000
     }
   },
   

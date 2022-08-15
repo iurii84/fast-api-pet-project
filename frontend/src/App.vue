@@ -26,9 +26,13 @@ import { readIsLoggedIn } from '@/store/main/getters';
 import { dispatchCheckLoggedIn } from '@/store/main/actions';
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+
+
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+
+
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)

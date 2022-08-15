@@ -8,6 +8,7 @@ import { State } from '../state';
 import {
     commitAddNotification,
     commitRemoveNotification,
+    commitSetAvailableSensors,
     commitSetLoggedIn,
     commitSetLogInError,
     commitSetToken,
@@ -154,6 +155,17 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
+    async actionGetSensors(context: MainContext) {
+        try {
+            const response = await api.getSensors();
+            if (response.data) {
+                commitSetAvailableSensors(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -171,3 +183,4 @@ export const dispatchUpdateUserProfile = dispatch(actions.actionUpdateUserProfil
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+export const dispatchedGetAwailableSensors = dispatch(actions.actionGetSensors);

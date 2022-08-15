@@ -61,6 +61,11 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-profile-charts" */ './views/main/profile/Charts.vue'),
                 },
+                {
+                  path: 'compress_db',
+                  component: () => import(
+                    /* webpackChunkName: "main-profile-compress_db" */ './views/main/profile/Compress_db.vue'),
+                },
               ],
             },
             {

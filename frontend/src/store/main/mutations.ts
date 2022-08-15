@@ -1,10 +1,13 @@
-import { IUserProfile } from '@/interfaces';
+import {  ISensorAvailableList, IUserProfile } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 
 export const mutations = {
+    setAvailableSensors(state: MainState, payload: ISensorAvailableList[]) {
+        state.availableSensors = payload;
+    },
     setToken(state: MainState, payload: string) {
         state.token = payload;
     },
@@ -41,3 +44,4 @@ export const commitSetToken = commit(mutations.setToken);
 export const commitSetUserProfile = commit(mutations.setUserProfile);
 export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);
+export const commitSetAvailableSensors = commit(mutations.setAvailableSensors);

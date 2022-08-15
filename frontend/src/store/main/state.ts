@@ -1,4 +1,4 @@
-import { IUserProfile } from '@/interfaces';
+import { ISensorAvailableList, IUserProfile } from '@/interfaces';
 
 export interface AppNotification {
     content: string;
@@ -14,4 +14,6 @@ export interface MainState {
     dashboardMiniDrawer: boolean;
     dashboardShowDrawer: boolean;
     notifications: AppNotification[];
+    
+    availableSensors: ISensorAvailableList[];
 }

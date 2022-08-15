@@ -12,6 +12,7 @@
         <v-btn to="/main/profile/edit">Edit Profile</v-btn>
         <v-btn to="/main/profile/password">Change Password</v-btn>
         <v-btn to="/main/profile/charts">View Chart</v-btn>
+        <v-btn to="/main/profile/compress_db">Compress DB</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
