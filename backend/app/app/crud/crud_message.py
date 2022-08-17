@@ -48,15 +48,12 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
 
     def compress_data(self,
                       db: Session,
-                      start_date_time,
-                      end_date_time,
-                      for_items_with_compress_ratio,
-                      uuid):
+                      obj_in):
         db_date_time_delta = db.query(self.model). \
-            where((and_(self.model.created > start_date_time,
-                        self.model.created < end_date_time,
-                        self.model.uuid == uuid,
-                        self.model.compress_ratio == for_items_with_compress_ratio))).all()
+            where((and_(self.model.created > obj_in.start_date_time,
+                        self.model.created < obj_in.end_date_time,
+                        self.model.uuid == obj_in.uuid,
+                        self.model.compress_ratio == obj_in.for_items_with_compress_ratio))).all()
         items_found = len(db_date_time_delta)
         items_selected_to_compress = None
 
@@ -67,7 +64,7 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
             even = False
 
         if even:
-            pass
+            items_selected_to_compress = items_found
         else:
             db_date_time_delta.pop()
             items_selected_to_compress = len(db_date_time_delta)
@@ -109,8 +106,8 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
         return {"items_found": items_found,
                 "is_even": even,
                 "items_selected_to_compress": items_selected_to_compress,
-                "db_update": db_update,
-                "db_delete": db_delete}
+                "db_update": None,
+                "db_delete": None}
 
 
 message = CRUDMessage(Message)

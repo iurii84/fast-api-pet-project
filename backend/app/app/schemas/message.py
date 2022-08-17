@@ -20,3 +20,9 @@ class MessageInDb(Message):
 
     class Config:
         orm_mode = True
+
+
+class MessageCompress(MessageBase):
+    start_date_time: datetime.datetime
+    end_date_time: datetime.datetime
+    for_items_with_compress_ratio: int

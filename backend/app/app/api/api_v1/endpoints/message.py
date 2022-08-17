@@ -34,15 +34,9 @@ def get_messages(db: Session = Depends(deps.get_db),
 
 
 @router.post("/compress_after_date_time")
-def compress_after_date_time(start_date_time: datetime.datetime,
-                             end_date_time: datetime.datetime,
-                             for_items_with_compress_ratio: int,
-                             uuid: str,
-                             db: Session = Depends(deps.get_db)
-                             ) -> Any:
-    result = crud.message.compress_data(start_date_time=start_date_time,
-                                        end_date_time=end_date_time,
-                                        for_items_with_compress_ratio=for_items_with_compress_ratio,
-                                        uuid=uuid,
-                                        db=db)
+def compress_after_date_time(
+        msg: schemas.MessageCompress,
+        db: Session = Depends(deps.get_db)
+) -> Any:
+    result = crud.message.compress_data(obj_in=msg, db=db)
     return result
