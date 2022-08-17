@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import {ISensorAvailableList,  IUserProfile, IUserProfileUpdate, IUserProfileCreate } from './interfaces';
+import {ISensorAvailableList,  IUserProfile, IUserProfileUpdate, IUserProfileCreate, ICompressDbPayload, ICompressResponse } from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -16,6 +16,10 @@ export const api = {
     return axios.get<ISensorAvailableList[]>(`${apiUrl}/api/v1/sensor`);
     
   },
+  async compressDb(token: string, data: ICompressDbPayload) {
+    return axios.post<ICompressResponse>(`${apiUrl}/api/v1/message/compress_after_date_time`, data);
+  },
+
   async logInGetToken(username: string, password: string) {
     const params = new URLSearchParams();
     params.append('username', username);

@@ -13,6 +13,7 @@ import {
     commitSetLogInError,
     commitSetToken,
     commitSetUserProfile,
+    commitCompressDb
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -166,6 +167,22 @@ export const actions = {
         }
 
     },
+
+    async actionCompressDb(context: MainContext, payload) {
+        try {
+            const loadingNotification = { content: 'compressing DB...', showProgress: true };
+            commitAddNotification(context, loadingNotification);
+            const response = (await Promise.all([
+                api.compressDb(context.state.token, payload),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 3600)),
+            ]))[0];
+            commitCompressDb(context, response.data);
+            commitRemoveNotification(context, loadingNotification);
+            commitAddNotification(context, { content: 'DB successfully compressed', color: 'success' });
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -183,4 +200,6 @@ export const dispatchUpdateUserProfile = dispatch(actions.actionUpdateUserProfil
 export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
+
 export const dispatchedGetAwailableSensors = dispatch(actions.actionGetSensors);
+export const dispatchedCompressDb = dispatch(actions.actionCompressDb);

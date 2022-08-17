@@ -17,6 +17,7 @@ export const getters = {
     firstNotification: (state: MainState) => state.notifications.length > 0 && state.notifications[0],
     
     available_sensors: (state: MainState) => state.availableSensors,
+    compress_db: (state: MainState) => state.compressDbResponse,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -31,3 +32,4 @@ export const readUserProfile = read(getters.userProfile);
 export const readFirstNotification = read(getters.firstNotification);
 
 export const readAvailableSensors = read(getters.available_sensors);
+export const readCompressDb = read(getters.compress_db);

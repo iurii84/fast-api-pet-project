@@ -31,3 +31,19 @@ export interface ISensorAvailableList {
     first_occurrence: string;
     date_registered: string;
 }
+
+export interface ICompressDbPayload {
+    uuid: string;
+    for_items_with_compress_ratio: number;
+    start_date_time: string;
+    end_date_time: string;
+}
+
+
+export interface ICompressResponse {
+    items_found: number;
+    is_even: boolean;
+    items_selected_to_compress: null;
+    db_update: number;
+    db_delete: number;
+  }

@@ -5,6 +5,7 @@
             <div class="headline primary--text">Compress DB</div>
         </v-card-title>
 
+        <p>Value: '{{ response_compress_db }}'</p>
         <div>
             <b-form id='compress_db_form' @submit.stop.prevent="compress_db"  >
                 <b-form-group id="sensor_select" label="Select sensor:" label-for="sensor_select_form" >
@@ -108,12 +109,13 @@
 
 <script>
 import { Store } from 'vuex';
-import { readAvailableSensors } from '@/store/main/getters';
-import { dispatchedGetAwailableSensors } from '@/store/main/actions';
+import { readAvailableSensors, readCompressDb } from '@/store/main/getters';
+import { dispatchedGetAwailableSensors, dispatchedCompressDb } from '@/store/main/actions';
 import Vue from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import api from "@/api"
+import { mapState } from 'vuex';
 Vue.component('v-select', vSelect);
 
 
@@ -130,9 +132,11 @@ export default {
             }
            
             console.log(compress_payload)
+            dispatchedCompressDb(this.$store, compress_payload)
            
             this.spinner_visible=true
             this.button_inactive=true
+
         },
 
         get_sensor_list() {
@@ -153,9 +157,23 @@ export default {
             //triggered each time when select_sensor is opened
             this.get_sensor_list()
         },
+
+       
     },
 
+   computed: {
+    compressDbResponse: function(){
+      return readCompressDb(this.$store)
+    }
+  },
    
+   watch: {
+        compressDbResponse(newValue, oldValue) {
+            this.response_compress_db = `Successfully deleted ${newValue.items_selected_to_compress} items`
+            this.spinner_visible=false
+            this.button_inactive=false
+        }
+    },
 
     data() {
         return {
@@ -170,7 +188,8 @@ export default {
             show: true,
             selected_sensor: "",
             sensors_get_result: [],
-            sensor_select: []
+            sensor_select: [],
+            response_compress_db: ''
         }
     },
   

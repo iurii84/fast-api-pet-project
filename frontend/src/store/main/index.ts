@@ -13,6 +13,7 @@ const defaultState: MainState = {
   notifications: [],
   
   availableSensors: [],
+  compressDbResponse: null
 };
 
 export const mainModule = {
