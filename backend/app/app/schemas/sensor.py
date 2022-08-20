@@ -21,3 +21,9 @@ class Sensor(SensorBase):
         orm_mode = True
 
 
+class SensorToRegister(SensorBase):
+    first_occurrence: datetime.datetime
+    # type: Union[None, int]
+
+    class Config:
+        orm_mode = True

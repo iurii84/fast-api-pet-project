@@ -17,5 +17,10 @@ def get_sensors(db: Session = Depends(deps.get_db),
     sensors = crud.sensor.get_multi(db,
                                     skip=skip,
                                     limit=limit)
+    return sensors
 
+
+@router.get("/get_unregistered", response_model=List[schemas.SensorToRegister])
+def get_unregistered_sensors(db: Session = Depends(deps.get_db)) -> Any:
+    sensors = crud.sensor.get_unregistered_sensors(db)
     return sensors
