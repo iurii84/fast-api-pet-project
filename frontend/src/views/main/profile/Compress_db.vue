@@ -5,7 +5,22 @@
             <div class="headline primary--text">Compress DB</div>
         </v-card-title>
 
-        <p>Value: '{{ response_compress_db }}'</p>
+        <div>
+            <b-alert v-model="showDismissibleAlert" variant="success" dismissible>
+                <h4 class="alert-heading">Database was successfully compressed! </h4>
+                <hr>
+                <p class="mb-0">
+                    {{ response_compress_db }} records were deleted!
+                    <br>
+                    Timeline coverage  
+                    <br>
+                    <b>from: </b>  {{value_date_from}}  {{time_value_from}}   
+                    <br>
+                    <b>to:</b> &nbsp; &nbsp; &nbsp;{{value_date_to}}  {{time_value_to}}
+                </p> 
+            </b-alert>
+        </div>
+        
         <div>
             <b-form id='compress_db_form' @submit.stop.prevent="compress_db"  >
                 <b-form-group id="sensor_select" label="Select sensor:" label-for="sensor_select_form" >
@@ -47,8 +62,9 @@
                             required
                             >
                         </b-form-datepicker>
-                        <p>Value: '{{ value_date_from }}'</p>
 
+                        <br>
+                        
                         <label for="timepicker_from">Time from:</label>
                         <b-col md="auto">
                             <b-form-timepicker 
@@ -73,7 +89,8 @@
                             required
                             >
                         </b-form-datepicker>
-                        <p>Value: '{{ value_date_to }}'</p>
+                        
+                        <br>
 
                         <label for="timepicker_to">Time to:</label>
                         <b-col md="auto">
@@ -162,6 +179,7 @@ export default {
     },
 
    computed: {
+    //need to define computed and watch function with the same name to watch vuex changes
     compressDbResponse: function(){
       return readCompressDb(this.$store)
     }
@@ -169,7 +187,9 @@ export default {
    
    watch: {
         compressDbResponse(newValue, oldValue) {
-            this.response_compress_db = `Successfully deleted ${newValue.items_selected_to_compress} items`
+            //on vuex parameter change - execute this function
+            this.showDismissibleAlert = true
+            this.response_compress_db = newValue.items_selected_to_compress
             this.spinner_visible=false
             this.button_inactive=false
         }
@@ -189,7 +209,8 @@ export default {
             selected_sensor: "",
             sensors_get_result: [],
             sensor_select: [],
-            response_compress_db: ''
+            response_compress_db: '',
+            showDismissibleAlert: false
         }
     },
   

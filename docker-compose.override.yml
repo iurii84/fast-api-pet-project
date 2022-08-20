@@ -41,6 +41,10 @@ services:
       - "8888:8888"
     volumes:
       - ./backend/app:/app
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - JUPYTER=jupyter lab --ip=0.0.0.0 --allow-root --NotebookApp.custom_display_url=http://127.0.0.1:8888
       - SERVER_HOST=http://${DOMAIN?Variable not set}
@@ -82,6 +86,27 @@ services:
       - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=PathPrefix(`/`)
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=80
+
+  cassandra:
+    image: cassandra:4.0
+    ports:
+      - 9042:9042
+    volumes:
+      - ~/apps/cassandra:/var/lib/cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=io_cluster
+
+  cassandra-web:
+    image: markusgulden/cassandra-web
+    depends_on:
+      - cassandra
+    environment:
+      CASSANDRA_HOST_IPS: 192.168.88.254
+      CASSANDRA_PORT: 9042
+      CASSANDRA_USER: cassandra
+      CASSANDRA_PASSWORD: cassandra
+    ports:
+      - 3000:3000
 
 networks:
   traefik-public:
