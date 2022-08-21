@@ -14,7 +14,8 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
             uuid=obj_in.uuid,
             temp=obj_in.temp,
             hum=obj_in.hum,
-            created=datetime.now()
+            created=datetime.now(),
+            type=obj_in.type
         )
         db.add(db_obj)
         db.commit()

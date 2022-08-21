@@ -20,9 +20,15 @@ class CRUDSensor(CRUDBase[Sensor, Sensor, Sensor]):
 
     def get_unregistered_sensors(self, db: Session) -> List[SensorToRegister]:
         sub_query = db.query(Sensor.uuid).subquery()
-        res = db.query(distinct(Message.uuid).label("uuid"), func.min(Message.created).label("first_occurrence")).\
-            filter(Message.uuid.notin_(sub_query)).\
-            group_by(Message.uuid).all()
+        res = db.query(
+            distinct(Message.uuid).label("uuid"),
+            func.min(Message.created).label("first_occurrence"),
+            Message.type.label("type")). \
+            filter(Message.uuid.notin_(sub_query)). \
+            group_by(Message.uuid, Message.type).all()
+        # SELECT distinct uuid, min(created) as first_occurence, "type" FROM public.message
+        # where uuid  not in (Select  uuid from public.sensor)
+        # group by uuid, type
         return res
 
 

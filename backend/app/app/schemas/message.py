@@ -12,6 +12,7 @@ class MessageBase(BaseModel):
 class Message(MessageBase):
     temp: Union[None, float]
     hum: Union[None, float]
+    type: Union[None, int]
 
 
 class MessageInDb(Message):

@@ -15,3 +15,4 @@ class Message(Base):
     hum = Column(Float, index=True)
     created = Column(postgresql.TIMESTAMP, nullable=False)
     compress_ratio = Column(Integer, default=0, nullable=True)
+    type = Column(Integer, nullable=True)
