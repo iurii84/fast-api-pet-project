@@ -25,3 +25,11 @@ class SensorToRegister(SensorBase):
     first_occurrence: datetime.datetime
     type: Union[None, int]
 
+
+class RegisterSensor(SensorBase):
+    name: Union[None, str]
+    location: Union[None, int]
+
+
+class RegisterSensorReturn:
+    id: Union[None, int]

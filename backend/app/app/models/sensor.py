@@ -24,3 +24,6 @@ class SensorToRegister(Base):
     type = Column(Integer, nullable=True)
     first_occurrence = Column(postgresql.TIMESTAMP, nullable=False)
 
+
+class RegisterSensorReturn(Base):
+    id = Column(Integer, primary_key=True, index=True)

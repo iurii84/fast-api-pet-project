@@ -24,3 +24,9 @@ def get_sensors(db: Session = Depends(deps.get_db),
 def get_unregistered_sensors(db: Session = Depends(deps.get_db)) -> Any:
     sensors = crud.sensor.get_unregistered_sensors(db)
     return sensors
+
+
+@router.post("/register")
+def register_sensor(*, msg: schemas.RegisterSensor, db: Session = Depends(deps.get_db)) -> Any:
+    sensor = crud.sensor.register_sensor(db, msg=msg)
+    return sensor
