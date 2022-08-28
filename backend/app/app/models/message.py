@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, Float
 from sqlalchemy.dialects import postgresql
+from sqlalchemy.dialects.postgresql import UUID
 
 
 from app.db.base_class import Base
@@ -10,9 +11,9 @@ from app.db.base_class import Base
 
 class Message(Base):
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column()
+    uuid = Column(UUID(as_uuid=True), nullable=False)
     temp = Column(Float, index=True)
     hum = Column(Float, index=True)
-    created = Column(postgresql.TIMESTAMP, nullable=False)
-    compress_ratio = Column(Integer, default=0, nullable=True)
-    type = Column(Integer, nullable=True)
+    created = Column(postgresql.TIMESTAMP, nullable=False, index=True)
+    compress_ratio = Column(postgresql.SMALLINT, default=0, nullable=False)
+    type = Column(postgresql.SMALLINT, nullable=True)
