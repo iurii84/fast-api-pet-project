@@ -8,6 +8,8 @@ from app.db.base_class import Base
 
 
 class SensorLocation(Base):
+    __tablename__ = 'sensor_location'
+
     location_id = Column(Integer, primary_key=True, index=True)
     name = Column(postgresql.VARCHAR(50), nullable=False)
     description = Column(postgresql.TEXT, nullable=True)
