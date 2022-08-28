@@ -1,6 +1,16 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
-import {ISensorAvailableList,  IUserProfile, IUserProfileUpdate, IUserProfileCreate, ICompressDbPayload, ICompressResponse } from './interfaces';
+import {
+  ISensorAvailableList, 
+  ISensorNotRegisteredList, 
+  IUserProfile, 
+  IUserProfileUpdate, 
+  IUserProfileCreate, 
+  ICompressDbPayload, 
+  ICompressResponse, 
+  ISensorRegisterResponse, 
+  ISensorRegisterPost
+} from './interfaces';
 
 function authHeaders(token: string) {
   return {
@@ -11,10 +21,14 @@ function authHeaders(token: string) {
 }
 
 export const api = {
-  async getSensors() {
-    
+  async registerSensor(token: string, data: ISensorRegisterPost) { 
+    return axios.post<ISensorRegisterResponse>(`${apiUrl}/api/v1/sensor/register`, data);
+  },
+  async getSensors() { 
     return axios.get<ISensorAvailableList[]>(`${apiUrl}/api/v1/sensor`);
-    
+  },
+  async getNotRegisteredSensors() { 
+    return axios.get<ISensorNotRegisteredList[]>(`${apiUrl}/api/v1/sensor/get_unregistered`);
   },
   async compressDb(token: string, data: ICompressDbPayload) {
     return axios.post<ICompressResponse>(`${apiUrl}/api/v1/message/compress_after_date_time`, data);

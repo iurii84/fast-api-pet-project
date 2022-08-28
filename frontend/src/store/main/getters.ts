@@ -18,6 +18,7 @@ export const getters = {
     
     available_sensors: (state: MainState) => state.availableSensors,
     compress_db: (state: MainState) => state.compressDbResponse,
+    not_registered_sensors: (state: MainState) => state.notRegisteredSensors,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -33,3 +34,4 @@ export const readFirstNotification = read(getters.firstNotification);
 
 export const readAvailableSensors = read(getters.available_sensors);
 export const readCompressDb = read(getters.compress_db);
+export const readNotRegisteredSensors = read(getters.not_registered_sensors);

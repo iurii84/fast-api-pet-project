@@ -46,4 +46,26 @@ export interface ICompressResponse {
     items_selected_to_compress: null;
     db_update: number;
     db_delete: number;
-  }
+}
+
+export interface ISensorNotRegisteredList {
+    uuid: string;
+    type: number;
+    first_occurrence: string;
+}
+
+export interface ISensorRegisterPost {
+    uuid: string;
+    name: string;
+    location: number;
+}
+
+export interface ISensorRegisterResponse {
+    name: string;
+    type: number;
+    location: number;
+    date_registered: string;
+    id: number;
+    uuid: string;
+    first_occurrence: string;
+}

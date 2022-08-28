@@ -1,10 +1,16 @@
-import {  ISensorAvailableList, IUserProfile, ICompressResponse } from '@/interfaces';
+import {  ISensorAvailableList, ISensorNotRegisteredList, IUserProfile, ICompressResponse, ISensorRegisterResponse } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
 import { State } from '../state';
 
 
 export const mutations = {
+    setRegisterSensor(state: MainState, payload: ISensorRegisterResponse) {
+        state.registerSensor = payload;
+    },
+    setNotRegisteredSensors(state: MainState, payload: ISensorNotRegisteredList[]) {
+        state.notRegisteredSensors = payload;
+    },
     setAvailableSensors(state: MainState, payload: ISensorAvailableList[]) {
         state.availableSensors = payload;
     },
@@ -50,3 +56,5 @@ export const commitRemoveNotification = commit(mutations.removeNotification);
 
 export const commitSetAvailableSensors = commit(mutations.setAvailableSensors);
 export const commitCompressDb = commit(mutations.setCompressDb);
+export const commitSetNotRegisteredSensors = commit(mutations.setNotRegisteredSensors);
+export const commitRegisterSensor = commit(mutations.setRegisterSensor);

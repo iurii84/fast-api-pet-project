@@ -1,4 +1,4 @@
-import { ISensorAvailableList, IUserProfile, ICompressResponse} from '@/interfaces';
+import { ISensorAvailableList, IUserProfile, ICompressResponse, ISensorNotRegisteredList, ISensorRegisterResponse} from '@/interfaces';
 
 export interface AppNotification {
     content: string;
@@ -16,5 +16,7 @@ export interface MainState {
     notifications: AppNotification[];
     
     availableSensors: ISensorAvailableList[];
-    compressDbResponse: ICompressResponse | null
+    compressDbResponse: ICompressResponse | null;
+    notRegisteredSensors: ISensorNotRegisteredList[];
+    registerSensor: ISensorRegisterResponse | null
 }

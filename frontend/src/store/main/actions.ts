@@ -13,7 +13,9 @@ import {
     commitSetLogInError,
     commitSetToken,
     commitSetUserProfile,
-    commitCompressDb
+    commitCompressDb,
+    commitSetNotRegisteredSensors,
+    commitRegisterSensor
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -183,6 +185,33 @@ export const actions = {
             await dispatchCheckApiError(context, error);
         }
     },
+
+    async actionGetNotRegisteredSensors(context: MainContext) {
+        try {
+            const response = await api.getNotRegisteredSensors();
+            if (response.data) {
+                commitSetNotRegisteredSensors(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
+    async actionRegisterSensor(context: MainContext, payload) {
+        try {
+            const response = (await Promise.all([
+                api.registerSensor(context.state.token, payload),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitRegisterSensor(context, response.data);
+            commitAddNotification(context, { content: 'Sensor ' + response.data.uuid + ' successfully registered!', color: 'success' });
+            //update list of unregistered sensors
+            dispatchedGetNotRegisteredSensors(context)
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
 };
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
@@ -203,3 +232,5 @@ export const dispatchResetPassword = dispatch(actions.resetPassword);
 
 export const dispatchedGetAwailableSensors = dispatch(actions.actionGetSensors);
 export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
+export const dispatchedGetNotRegisteredSensors = dispatch(actions.actionGetNotRegisteredSensors);
+export const dispatchRegisterSensor = dispatch(actions.actionRegisterSensor);
