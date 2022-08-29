@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from fastapi import HTTPException
 from typing import List
 
-from sqlalchemy import func, and_, distinct, subquery, select
+from sqlalchemy import func, distinct
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
