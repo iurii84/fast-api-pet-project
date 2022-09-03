@@ -9,7 +9,9 @@ import {
   ICompressDbPayload, 
   ICompressResponse, 
   ISensorRegisterResponse, 
-  ISensorRegisterPost
+  ISensorRegisterPost,
+  ISensorLocationResponse,
+  ISensorTypeResponse
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -21,6 +23,12 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async getSensorTypes() { 
+    return axios.get<ISensorTypeResponse[]>(`${apiUrl}/api/v1/sensor_type`);
+  },
+  async getSensorLocations() { 
+    return axios.get<ISensorLocationResponse[]>(`${apiUrl}/api/v1/sensor_location`);
+  },
   async registerSensor(token: string, data: ISensorRegisterPost) { 
     return axios.post<ISensorRegisterResponse>(`${apiUrl}/api/v1/sensor/register`, data);
   },

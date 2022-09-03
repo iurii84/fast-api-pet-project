@@ -15,7 +15,9 @@ import {
     commitSetUserProfile,
     commitCompressDb,
     commitSetNotRegisteredSensors,
-    commitRegisterSensor
+    commitRegisterSensor,
+    commitSetSensorLocations,
+    commitSetSensorTypes
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -208,9 +210,34 @@ export const actions = {
             commitAddNotification(context, { content: 'Sensor ' + response.data.uuid + ' successfully registered!', color: 'success' });
             //update list of unregistered sensors
             dispatchedGetNotRegisteredSensors(context)
+            dispatchedGetAwailableSensors(context)
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
+    },
+
+    async actionGetSensorLocations(context: MainContext) {
+        try {
+            const response = await api.getSensorLocations();
+            if (response.data) {
+                commitSetSensorLocations(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
+    async actionGetSensorTypes(context: MainContext) {
+        try {
+            const response = await api.getSensorTypes();
+            if (response.data) {
+                commitSetSensorTypes(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
     },
 };
 
@@ -234,3 +261,5 @@ export const dispatchedGetAwailableSensors = dispatch(actions.actionGetSensors);
 export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
 export const dispatchedGetNotRegisteredSensors = dispatch(actions.actionGetNotRegisteredSensors);
 export const dispatchRegisterSensor = dispatch(actions.actionRegisterSensor);
+export const dispatchSensorLocations = dispatch(actions.actionGetSensorLocations);
+export const dispatchSensorTypes = dispatch(actions.actionGetSensorTypes);

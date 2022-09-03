@@ -15,7 +15,9 @@ const defaultState: MainState = {
   availableSensors: [],
   compressDbResponse: null,
   notRegisteredSensors: [],
-  registerSensor: null
+  registerSensor: null,
+  sensorLocations: [],
+  sensorTypes: []
 };
 
 export const mainModule = {

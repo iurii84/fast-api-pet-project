@@ -69,3 +69,15 @@ export interface ISensorRegisterResponse {
     uuid: string;
     first_occurrence: string;
 }
+
+export interface ISensorLocationResponse {
+    id: number;
+    name: string;
+    description: string;
+}
+
+export interface ISensorTypeResponse {
+    id: number;
+    name: string;
+    description: string;
+}
