@@ -9,15 +9,15 @@
                 <b-table striped hover sort-icon-left
                     :items="table_items" 
                     :fields="table_fields" 
-                    :sort-by.sync="sortBy"
-                    :sort-desc.sync="sortDesc"
+                    :sort-by.sync="nonRegSortBy"
+                    :sort-desc.sync="nonRegSortDesc"
                     label-sort-asc=""
                     label-sort-desc=""
                     label-sort-clear=""
                     v-model="currentItems">
 
-                    <template v-slot:cell()="data">
-                        <span  v-b-tooltip.hover :title=returnToolTip(data.value)>{{ data.value}}</span>
+                    <template v-slot:cell(type)="data">
+                        <span  v-b-tooltip.hover :title=returnTypeToolTip(data.value)>{{ data.value}}</span>
                     </template>
 
                     <template v-slot:cell(actions)="{ detailsShowing, item }" >
@@ -75,17 +75,38 @@
                 <b-table striped hover sort-icon-left
                     :items="table_items_registered" 
                     :fields="table_fields_registered" 
-                    :sort-by.sync="sortBy"
-                    :sort-desc.sync="sortDesc"
+                    :sort-by.sync="regSortBy"
+                    :sort-desc.sync="regSortDesc"
                     label-sort-asc=""
                     label-sort-desc=""
                     label-sort-clear=""
                     v-model="currentItems_registered">
 
-                    <template v-slot:cell()="data">
-                        <span  v-b-tooltip.hover :title=returnToolTip(data.value)>{{ data.value}}</span>
+                   <template v-slot:cell(type)="data">
+                        <span  v-b-tooltip.hover :title=returnTypeToolTip(data.value)>{{ data.value}}</span>
                     </template>
-                    
+
+                    <template v-slot:cell(location)="data">
+                        <span  v-b-tooltip.hover :title=returnLocationTooltip(data.value)>{{ data.value}}</span>
+                    </template> 
+
+                    <template v-slot:cell(actions)="{ detailsShowing, item }">                        
+                        <v-icon class="registered_icons" @click="toggleDetailsRegistered(item)">{{ detailsShowing ? 'close' : 'edit'}}</v-icon>
+                        <v-icon class="registered_icons" @click="deleteSensor(item)">delete</v-icon>
+                    </template>
+
+                    <template v-slot:row-details="{ item }">
+                        <b-card>
+                        <label for="field_input_uuid" class="field_input">UUID: </label>
+                        <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
+                        {{sensor_uuid = item.uuid}}    
+                        </b-form-input>
+
+                        <br>
+                        
+                        
+                        </b-card>
+                    </template> 
                 
                 </b-table>
             </div>
@@ -136,11 +157,27 @@
 
         //finds a specific item based on the provided ID and toggles details on that item
         toggleDetails(row) {
+            console.log("toggleDetails: " + JSON.stringify(row))
             if(row._showDetails){
             this.$set(row, '_showDetails', false)
             }
             else{
                 this.currentItems.forEach(item => {
+                    this.$set(item, '_showDetails', false)
+                })
+
+                this.$nextTick(() => {
+                    this.$set(row, '_showDetails', true)
+                })
+            }
+        },
+        toggleDetailsRegistered(row) {
+            console.log("toggleDetailsRegistered: " + JSON.stringify(row))
+            if(row._showDetails){
+            this.$set(row, '_showDetails', false)
+            }
+            else{
+                this.currentItems_registered.forEach(item => {
                     this.$set(item, '_showDetails', false)
                 })
 
@@ -206,27 +243,35 @@
             return location_by_id
         },
 
-        returnToolTip(item_name) {
-            let descr_by_name;
+        returnTypeToolTip(item_name) {
+            let type_descr_by_name;
             for (let item of this.sensor_types) {
                 if (item.name === item_name) {
-                    descr_by_name = item.description
+                    type_descr_by_name = item.description
                     break
                }
                else {
-                    for (let item of this.sensor_locations_api) {
-                        if (item.name === item_name) {
-                            descr_by_name = item.description
-                            break
-                        }
-                        else {
-                                descr_by_name = null
-                        }   
-                    }
+                    type_descr_by_name = item_name
                }   
             }
-            return descr_by_name
+            return type_descr_by_name
         }, 
+        returnLocationTooltip(item_name) {
+            let loc_by_name;
+            for (let item of this.sensor_locations_api) {
+                if (item.name === item_name) {
+                    loc_by_name = item.description
+                    break
+                }
+                else {
+                    loc_by_name = item_name
+                }   
+            }
+            return loc_by_name;
+        },
+        deleteSensor(item) {
+            console.log("DELETE SENSOR: " + JSON.stringify(item.id))
+        }
     },
 
    computed: {
@@ -257,7 +302,8 @@
 
             this.table_items = not_registered_sensors_arr
             this.register_button_inactive = false
-            this.typeUpdate()
+            // this.typeUpdate()
+            this.is_type_updated = false
         },
         readAvailableSensors(newValue, oldValue) {
             //on vuex parameter change - execute this function
@@ -294,8 +340,10 @@
             sensor_locations_api: [],
             sensor_types: [],
             
-            sortBy: 'first_occurrence',
-            sortDesc: false,
+            nonRegSortBy: 'first_occurrence',
+            regSortBy: 'date_registered',
+            nonRegSortDesc: false,
+            regSortDesc: true,
 
             is_type_updated: false,
             is_location_updated: false,
@@ -372,5 +420,8 @@
 
 .no_blink {
     caret-color: transparent;
+}
+.registered_icons {
+    margin-right: 30px
 }
 </style>
