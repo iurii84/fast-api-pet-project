@@ -8,7 +8,7 @@ from app.db.base_class import Base
 #     from .message import Message  # noqa: F401
 
 
-class Sensor(Base):
+class Device(Base):
     id = Column(postgresql.BIGINT, primary_key=True, index=True)
     name = Column(postgresql.TEXT, nullable=True)
     uuid = Column(nullable=False)

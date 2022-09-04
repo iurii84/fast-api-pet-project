@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 
-class SensorLocationBase(BaseModel):
-    location_id: int
+class DeviceTypeBase(BaseModel):
+    type_id: int
     name: str
     description: str
 

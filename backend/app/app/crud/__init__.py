@@ -1,9 +1,9 @@
 from .crud_item import item
 from .crud_user import user
 from .crud_message import message
-from .crud_sensor import sensor
-from .crud_sensor_location import sensor_location
-from .crud_sensor_type import sensor_type
+from .crud_device import device
+from .crud_device_location import device_location
+from .crud_device_type import device_type
 
 # For a new basic set of CRUD operations you could just do
 

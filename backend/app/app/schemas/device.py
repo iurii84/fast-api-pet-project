@@ -9,7 +9,7 @@ class SensorBase(BaseModel):
     uuid: UUID4
 
 
-class Sensor(SensorBase):
+class Device(SensorBase):
     id: Union[None, int]
     name: Union[None, str]
     type: Union[None, int]
@@ -21,15 +21,15 @@ class Sensor(SensorBase):
         orm_mode = True
 
 
-class SensorToRegister(SensorBase):
+class DeviceToRegister(SensorBase):
     first_occurrence: datetime.datetime
     type: Union[None, int]
 
 
-class RegisterSensor(SensorBase):
+class RegisterDevice(SensorBase):
     name: Union[None, str]
     location: Union[None, int]
 
 
-class RegisterSensorReturn:
+class RegisterDeviceReturn:
     id: Union[None, int]

@@ -3,6 +3,6 @@ from .msg import Msg
 from .token import Token, TokenPayload
 from .user import User, UserCreate, UserInDB, UserUpdate
 from .message import Message, MessageInDb, MessageCompress
-from .sensor import Sensor, SensorToRegister, RegisterSensorReturn, RegisterSensor
-from .sensor_location import SensorLocationBase
-from .sensor_type import SensorTypeBase
+from .device import Device, DeviceToRegister, RegisterDeviceReturn, RegisterDevice
+from .device_location import DeviceLocationBase
+from .device_type import DeviceTypeBase

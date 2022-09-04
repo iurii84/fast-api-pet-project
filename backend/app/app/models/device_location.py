@@ -7,10 +7,10 @@ from app.db.base_class import Base
 #     from .message import Message  # noqa: F401
 
 
-class SensorType(Base):
-    __tablename__ = 'sensor_type'
+class DeviceLocation(Base):
+    __tablename__ = 'device_location'
 
-    type_id = Column(Integer, primary_key=True, index=True)
+    location_id = Column(Integer, primary_key=True, index=True)
     name = Column(postgresql.VARCHAR(50), nullable=False)
     description = Column(postgresql.TEXT, nullable=True)
 
