@@ -16,6 +16,7 @@ const defaultState: MainState = {
   compressDbResponse: null,
   notRegisteredDevices: [],
   registerDevice: null,
+  deleteDevice: null,
   deviceLocations: [],
   deviceTypes: []
 };

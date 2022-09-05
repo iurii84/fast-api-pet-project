@@ -81,3 +81,7 @@ export interface IDeviceTypeResponse {
     name: string;
     description: string;
 }
+
+export interface IDeviceDeleteResponse {
+    id: number;
+}

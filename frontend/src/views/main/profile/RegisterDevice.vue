@@ -4,6 +4,41 @@
             <v-card-title primary-title>
                 <div class="headline primary--text">Unregistered Devices</div>
             </v-card-title>
+
+            <b-modal ref="delete-device-confirm" hide-footer title="You are about to delete following device from database:">
+                <div class="d-block text-center">
+                    
+                    <div class="device_to_delete_fields">
+                        <b>
+                            <label for="device_id_to_delete">ID: </label>
+                        </b>
+                        <span id="device_id_to_delete">
+                            {{device_selected_to_delete.id}}
+                        </span>
+                    </div>
+                    
+                    <div class="device_to_delete_fields">
+                        <b>
+                            <label for="device_uuid_to_delete" >UUID: </label> 
+                        </b>
+                        <span id="device_uuid_to_delete">
+                            {{device_selected_to_delete.uuid}}
+                        </span>
+                    </div>
+
+                    <div class="device_to_delete_fields">
+                        <b>
+                            <label for="device_name_to_delete" >NAME: </label> 
+                        </b>
+                        <span id="device_name_to_delete">
+                            {{device_selected_to_delete.name}}
+                        </span>
+                    </div>
+                     
+                </div>
+                <b-button class="mt-3" variant="info" block @click="abortDeletingDevice">Abort</b-button>
+                <b-button class="mt-3" variant="danger" block @click="deleteDeviceAfterConfirm">Delete</b-button>
+            </b-modal>
        
             <div>
                 <b-table striped hover sort-icon-left
@@ -125,6 +160,7 @@
     import { 
         dispatchGetNotRegisteredDevices, 
         dispatchRegisterDevice, 
+        dispatchDeleteDevice,
         dispatchDeviceLocations,
         dispatchDeviceTypes,
         dispatchGetAwailableDevices 
@@ -270,8 +306,22 @@
             return loc_by_name;
         },
         deleteDevice(item) {
-            console.log("DELETE DEVICE: " + JSON.stringify(item.id))
+            this.device_selected_to_delete = item
+            console.log("DEVICE SELECTED TO DELETE: " + JSON.stringify(item.id))
+            this.$refs['delete-device-confirm'].show()
+        },
+        deleteDeviceAfterConfirm() {
+            console.log("DELETE DEVICE AFTER CONFIRM: " + this.device_id_selected_to_delete)
+            dispatchDeleteDevice(this.$store, this.device_selected_to_delete.id)
+            this.device_selected_to_delete = {}
+            this.$refs['delete-device-confirm'].hide()
+            
+        },
+        abortDeletingDevice() {
+            this.device_selected_to_delete = {}
+            this.$refs['delete-device-confirm'].hide()
         }
+
     },
 
    computed: {
@@ -366,6 +416,8 @@
             ],
             table_items_registered: [],
             not_registered_devices: false,
+
+            device_selected_to_delete: {}
            
         }
     },
@@ -424,4 +476,10 @@
 .registered_icons {
     margin-right: 30px
 }
+
+
+.device_to_delete_fields {
+    text-align: left;
+}
+
 </style>

@@ -5,7 +5,8 @@ import {
     ICompressResponse, 
     IDeviceRegisterResponse, 
     IDeviceLocationResponse,
-    IDeviceTypeResponse 
+    IDeviceTypeResponse, 
+    IDeviceDeleteResponse
 } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -21,6 +22,9 @@ export const mutations = {
     },
     setRegisterDevice(state: MainState, payload: IDeviceRegisterResponse) {
         state.registerDevice = payload;
+    },
+    setDeleteDevice(state: MainState, payload: IDeviceDeleteResponse) {
+        state.deleteDevice = payload;
     },
     setNotRegisteredDevices(state: MainState, payload: IDeviceNotRegisteredList[]) {
         state.notRegisteredDevices = payload;
@@ -72,5 +76,6 @@ export const commitSetAvailableDevices = commit(mutations.setAvailableDevices);
 export const commitCompressDb = commit(mutations.setCompressDb);
 export const commitSetNotRegisteredDevices = commit(mutations.setNotRegisteredDevices);
 export const commitRegisterDevice = commit(mutations.setRegisterDevice);
+export const commitDeleteDevice = commit(mutations.setDeleteDevice);
 export const commitSetDeviceLocations = commit(mutations.setDeviceLocations);
 export const commitSetDeviceTypes = commit(mutations.setDeviceTypes);

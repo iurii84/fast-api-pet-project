@@ -67,9 +67,9 @@ export default new Router({
                     /* webpackChunkName: "main-profile-compress_db" */ './views/main/profile/Compress_db.vue'),
                 },
                 {
-                  path: 'register_sensor',
+                  path: 'register_device',
                   component: () => import(
-                    /* webpackChunkName: "main-profile-compress_db" */ './views/main/profile/RegisterSensor.vue'),
+                    /* webpackChunkName: "main-profile-register_device" */ './views/main/profile/RegisterDevice.vue'),
                 },
               ],
             },

@@ -5,7 +5,8 @@ import {
     IDeviceNotRegisteredList, 
     IDeviceRegisterResponse, 
     IDeviceLocationResponse,
-    IDeviceTypeResponse
+    IDeviceTypeResponse,
+    IDeviceDeleteResponse
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -27,6 +28,7 @@ export interface MainState {
     compressDbResponse: ICompressResponse | null;
     notRegisteredDevices: IDeviceNotRegisteredList[];
     registerDevice: IDeviceRegisterResponse | null;
+    deleteDevice: IDeviceDeleteResponse | null;
     deviceLocations: IDeviceLocationResponse[];
     deviceTypes: IDeviceTypeResponse[];
 }

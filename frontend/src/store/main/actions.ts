@@ -17,7 +17,8 @@ import {
     commitSetNotRegisteredDevices,
     commitRegisterDevice,
     commitSetDeviceLocations,
-    commitSetDeviceTypes
+    commitSetDeviceTypes,
+    commitDeleteDevice
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -217,6 +218,23 @@ export const actions = {
         }
     },
 
+    async actionDeleteDevice(context: MainContext, device_id: number) {
+        try {
+            const response = (await Promise.all([
+                api.deleteDevice(context.state.token, device_id),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitDeleteDevice(context, response.data);
+            commitAddNotification(context, { content: 'Device with id ' + response.data.id + ' was successfully removed from DB!', color: 'success' });
+            // update list of unregistered devices
+            dispatchGetNotRegisteredDevices(context)
+            // update list of registered devices
+            dispatchGetAwailableDevices(context)
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+
     async actionGetDeviceLocations(context: MainContext) {
         try {
             const response = await api.getDeviceLocations();
@@ -262,5 +280,6 @@ export const dispatchGetAwailableDevices = dispatch(actions.actionGetDevices);
 export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
 export const dispatchGetNotRegisteredDevices = dispatch(actions.actionGetNotRegisteredDevices);
 export const dispatchRegisterDevice = dispatch(actions.actionRegisterDevice);
+export const dispatchDeleteDevice = dispatch(actions.actionDeleteDevice);
 export const dispatchDeviceLocations = dispatch(actions.actionGetDeviceLocations);
 export const dispatchDeviceTypes = dispatch(actions.actionGetDeviceTypes);
