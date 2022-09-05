@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app import schemas, crud
@@ -29,3 +29,21 @@ def get_unregistered_devices(db: Session = Depends(deps.get_db)) -> Any:
 def register_device(*, msg: schemas.RegisterDevice, db: Session = Depends(deps.get_db)) -> Any:
     device = crud.device.register_device(db, msg=msg)
     return device
+
+
+@router.delete("/{id}", response_model=schemas.DeleteDeviceReturn)
+def delete_device(
+    *,
+    db: Session = Depends(deps.get_db),
+    id: int,
+) -> Any:
+    """
+    Delete an item.
+    """
+    device = crud.device.get(db=db, id=id)
+    if not device:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    device = crud.device.remove(db=db, id=id)
+    return device
+

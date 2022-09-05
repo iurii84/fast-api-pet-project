@@ -33,3 +33,9 @@ class RegisterDevice(SensorBase):
 
 class RegisterDeviceReturn:
     id: Union[None, int]
+
+
+class DeleteDeviceReturn(BaseModel):
+    id: Union[None, int]
+    class Config:
+        orm_mode = True
