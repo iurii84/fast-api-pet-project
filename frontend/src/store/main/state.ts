@@ -1,11 +1,11 @@
 import { 
-    ISensorAvailableList, 
+    IDeviceAvailableList, 
     IUserProfile, 
     ICompressResponse, 
-    ISensorNotRegisteredList, 
-    ISensorRegisterResponse, 
-    ISensorLocationResponse,
-    ISensorTypeResponse
+    IDeviceNotRegisteredList, 
+    IDeviceRegisterResponse, 
+    IDeviceLocationResponse,
+    IDeviceTypeResponse
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -23,10 +23,10 @@ export interface MainState {
     dashboardShowDrawer: boolean;
     notifications: AppNotification[];
     
-    availableSensors: ISensorAvailableList[];
+    availableDevices: IDeviceAvailableList[];
     compressDbResponse: ICompressResponse | null;
-    notRegisteredSensors: ISensorNotRegisteredList[];
-    registerSensor: ISensorRegisterResponse | null;
-    sensorLocations: ISensorLocationResponse[];
-    sensorTypes: ISensorTypeResponse[];
+    notRegisteredDevices: IDeviceNotRegisteredList[];
+    registerDevice: IDeviceRegisterResponse | null;
+    deviceLocations: IDeviceLocationResponse[];
+    deviceTypes: IDeviceTypeResponse[];
 }

@@ -8,16 +8,16 @@ import { State } from '../state';
 import {
     commitAddNotification,
     commitRemoveNotification,
-    commitSetAvailableSensors,
+    commitSetAvailableDevices,
     commitSetLoggedIn,
     commitSetLogInError,
     commitSetToken,
     commitSetUserProfile,
     commitCompressDb,
-    commitSetNotRegisteredSensors,
-    commitRegisterSensor,
-    commitSetSensorLocations,
-    commitSetSensorTypes
+    commitSetNotRegisteredDevices,
+    commitRegisterDevice,
+    commitSetDeviceLocations,
+    commitSetDeviceTypes
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -160,11 +160,11 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
-    async actionGetSensors(context: MainContext) {
+    async actionGetDevices(context: MainContext) {
         try {
-            const response = await api.getSensors();
+            const response = await api.getDevices();
             if (response.data) {
-                commitSetAvailableSensors(context, response.data);
+                commitSetAvailableDevices(context, response.data);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -188,11 +188,11 @@ export const actions = {
         }
     },
 
-    async actionGetNotRegisteredSensors(context: MainContext) {
+    async actionGetNotRegisteredDevices(context: MainContext) {
         try {
-            const response = await api.getNotRegisteredSensors();
+            const response = await api.getNotRegisteredDevices();
             if (response.data) {
-                commitSetNotRegisteredSensors(context, response.data);
+                commitSetNotRegisteredDevices(context, response.data);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -200,27 +200,28 @@ export const actions = {
 
     },
 
-    async actionRegisterSensor(context: MainContext, payload) {
+    async actionRegisterDevice(context: MainContext, payload) {
         try {
             const response = (await Promise.all([
-                api.registerSensor(context.state.token, payload),
+                api.registerDevice(context.state.token, payload),
                 await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
             ]))[0];
-            commitRegisterSensor(context, response.data);
-            commitAddNotification(context, { content: 'Sensor ' + response.data.uuid + ' successfully registered!', color: 'success' });
-            //update list of unregistered sensors
-            dispatchedGetNotRegisteredSensors(context)
-            dispatchedGetAwailableSensors(context)
+            commitRegisterDevice(context, response.data);
+            commitAddNotification(context, { content: 'Device ' + response.data.uuid + ' successfully registered!', color: 'success' });
+            // update list of unregistered devices
+            dispatchGetNotRegisteredDevices(context)
+            // update list of registered devices
+            dispatchGetAwailableDevices(context)
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
     },
 
-    async actionGetSensorLocations(context: MainContext) {
+    async actionGetDeviceLocations(context: MainContext) {
         try {
-            const response = await api.getSensorLocations();
+            const response = await api.getDeviceLocations();
             if (response.data) {
-                commitSetSensorLocations(context, response.data);
+                commitSetDeviceLocations(context, response.data);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -228,11 +229,11 @@ export const actions = {
 
     },
 
-    async actionGetSensorTypes(context: MainContext) {
+    async actionGetDeviceTypes(context: MainContext) {
         try {
-            const response = await api.getSensorTypes();
+            const response = await api.getDeviceTypes();
             if (response.data) {
-                commitSetSensorTypes(context, response.data);
+                commitSetDeviceTypes(context, response.data);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -257,9 +258,9 @@ export const dispatchRemoveNotification = dispatch(actions.removeNotification);
 export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 
-export const dispatchedGetAwailableSensors = dispatch(actions.actionGetSensors);
+export const dispatchGetAwailableDevices = dispatch(actions.actionGetDevices);
 export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
-export const dispatchedGetNotRegisteredSensors = dispatch(actions.actionGetNotRegisteredSensors);
-export const dispatchRegisterSensor = dispatch(actions.actionRegisterSensor);
-export const dispatchSensorLocations = dispatch(actions.actionGetSensorLocations);
-export const dispatchSensorTypes = dispatch(actions.actionGetSensorTypes);
+export const dispatchGetNotRegisteredDevices = dispatch(actions.actionGetNotRegisteredDevices);
+export const dispatchRegisterDevice = dispatch(actions.actionRegisterDevice);
+export const dispatchDeviceLocations = dispatch(actions.actionGetDeviceLocations);
+export const dispatchDeviceTypes = dispatch(actions.actionGetDeviceTypes);

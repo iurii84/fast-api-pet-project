@@ -16,11 +16,11 @@ export const getters = {
     isLoggedIn: (state: MainState) => state.isLoggedIn,
     firstNotification: (state: MainState) => state.notifications.length > 0 && state.notifications[0],
     
-    available_sensors: (state: MainState) => state.availableSensors,
+    available_devices: (state: MainState) => state.availableDevices,
     compress_db: (state: MainState) => state.compressDbResponse,
-    not_registered_sensors: (state: MainState) => state.notRegisteredSensors,
-    sensor_locations: (state: MainState) => state.sensorLocations,
-    sensor_types: (state: MainState) => state.sensorTypes
+    not_registered_devices: (state: MainState) => state.notRegisteredDevices,
+    device_locations: (state: MainState) => state.deviceLocations,
+    device_types: (state: MainState) => state.deviceTypes
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -34,8 +34,8 @@ export const readToken = read(getters.token);
 export const readUserProfile = read(getters.userProfile);
 export const readFirstNotification = read(getters.firstNotification);
 
-export const readAvailableSensors = read(getters.available_sensors);
+export const readAvailableDevices = read(getters.available_devices);
 export const readCompressDb = read(getters.compress_db);
-export const readNotRegisteredSensors = read(getters.not_registered_sensors);
-export const readSensorLocations = read(getters.sensor_locations);
-export const readSensorTypes = read(getters.sensor_types);
+export const readNotRegisteredDevices = read(getters.not_registered_devices);
+export const readDeviceLocations = read(getters.device_locations);
+export const readDeviceTypes = read(getters.device_types);

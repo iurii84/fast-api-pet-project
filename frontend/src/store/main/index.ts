@@ -12,12 +12,12 @@ const defaultState: MainState = {
   dashboardShowDrawer: true,
   notifications: [],
   
-  availableSensors: [],
+  availableDevices: [],
   compressDbResponse: null,
-  notRegisteredSensors: [],
-  registerSensor: null,
-  sensorLocations: [],
-  sensorTypes: []
+  notRegisteredDevices: [],
+  registerDevice: null,
+  deviceLocations: [],
+  deviceTypes: []
 };
 
 export const mainModule = {

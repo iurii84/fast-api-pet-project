@@ -1,17 +1,17 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
 import {
-  ISensorAvailableList, 
-  ISensorNotRegisteredList, 
+  IDeviceAvailableList, 
+  IDeviceNotRegisteredList, 
   IUserProfile, 
   IUserProfileUpdate, 
   IUserProfileCreate, 
   ICompressDbPayload, 
   ICompressResponse, 
-  ISensorRegisterResponse, 
-  ISensorRegisterPost,
-  ISensorLocationResponse,
-  ISensorTypeResponse
+  IDeviceRegisterResponse, 
+  IDeviceRegisterPost,
+  IDeviceLocationResponse,
+  IDeviceTypeResponse
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -23,20 +23,20 @@ function authHeaders(token: string) {
 }
 
 export const api = {
-  async getSensorTypes() { 
-    return axios.get<ISensorTypeResponse[]>(`${apiUrl}/api/v1/sensor_type`);
+  async getDeviceTypes() { 
+    return axios.get<IDeviceTypeResponse[]>(`${apiUrl}/api/v1/device_type`);
   },
-  async getSensorLocations() { 
-    return axios.get<ISensorLocationResponse[]>(`${apiUrl}/api/v1/sensor_location`);
+  async getDeviceLocations() { 
+    return axios.get<IDeviceLocationResponse[]>(`${apiUrl}/api/v1/device_location`);
   },
-  async registerSensor(token: string, data: ISensorRegisterPost) { 
-    return axios.post<ISensorRegisterResponse>(`${apiUrl}/api/v1/sensor/register`, data);
+  async registerDevice(token: string, data: IDeviceRegisterPost) { 
+    return axios.post<IDeviceRegisterResponse>(`${apiUrl}/api/v1/device/register`, data);
   },
-  async getSensors() { 
-    return axios.get<ISensorAvailableList[]>(`${apiUrl}/api/v1/sensor`);
+  async getDevices() { 
+    return axios.get<IDeviceAvailableList[]>(`${apiUrl}/api/v1/device`);
   },
-  async getNotRegisteredSensors() { 
-    return axios.get<ISensorNotRegisteredList[]>(`${apiUrl}/api/v1/sensor/get_unregistered`);
+  async getNotRegisteredDevices() { 
+    return axios.get<IDeviceNotRegisteredList[]>(`${apiUrl}/api/v1/device/get_unregistered`);
   },
   async compressDb(token: string, data: ICompressDbPayload) {
     return axios.post<ICompressResponse>(`${apiUrl}/api/v1/message/compress_after_date_time`, data);

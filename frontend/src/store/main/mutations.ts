@@ -1,11 +1,11 @@
 import {  
-    ISensorAvailableList, 
-    ISensorNotRegisteredList, 
+    IDeviceAvailableList, 
+    IDeviceNotRegisteredList, 
     IUserProfile, 
     ICompressResponse, 
-    ISensorRegisterResponse, 
-    ISensorLocationResponse,
-    ISensorTypeResponse 
+    IDeviceRegisterResponse, 
+    IDeviceLocationResponse,
+    IDeviceTypeResponse 
 } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -13,20 +13,20 @@ import { State } from '../state';
 
 
 export const mutations = {
-    setSensorTypes(state: MainState, payload: ISensorTypeResponse[]) {
-        state.sensorTypes = payload;
+    setDeviceTypes(state: MainState, payload: IDeviceTypeResponse[]) {
+        state.deviceTypes = payload;
     },
-    setSensorLocations(state: MainState, payload: ISensorLocationResponse[]) {
-        state.sensorLocations = payload;
+    setDeviceLocations(state: MainState, payload: IDeviceLocationResponse[]) {
+        state.deviceLocations = payload;
     },
-    setRegisterSensor(state: MainState, payload: ISensorRegisterResponse) {
-        state.registerSensor = payload;
+    setRegisterDevice(state: MainState, payload: IDeviceRegisterResponse) {
+        state.registerDevice = payload;
     },
-    setNotRegisteredSensors(state: MainState, payload: ISensorNotRegisteredList[]) {
-        state.notRegisteredSensors = payload;
+    setNotRegisteredDevices(state: MainState, payload: IDeviceNotRegisteredList[]) {
+        state.notRegisteredDevices = payload;
     },
-    setAvailableSensors(state: MainState, payload: ISensorAvailableList[]) {
-        state.availableSensors = payload;
+    setAvailableDevices(state: MainState, payload: IDeviceAvailableList[]) {
+        state.availableDevices = payload;
     },
     setCompressDb(state: MainState, payload: ICompressResponse) {
         state.compressDbResponse = payload;
@@ -68,9 +68,9 @@ export const commitSetUserProfile = commit(mutations.setUserProfile);
 export const commitAddNotification = commit(mutations.addNotification);
 export const commitRemoveNotification = commit(mutations.removeNotification);
 
-export const commitSetAvailableSensors = commit(mutations.setAvailableSensors);
+export const commitSetAvailableDevices = commit(mutations.setAvailableDevices);
 export const commitCompressDb = commit(mutations.setCompressDb);
-export const commitSetNotRegisteredSensors = commit(mutations.setNotRegisteredSensors);
-export const commitRegisterSensor = commit(mutations.setRegisterSensor);
-export const commitSetSensorLocations = commit(mutations.setSensorLocations);
-export const commitSetSensorTypes = commit(mutations.setSensorTypes);
+export const commitSetNotRegisteredDevices = commit(mutations.setNotRegisteredDevices);
+export const commitRegisterDevice = commit(mutations.setRegisterDevice);
+export const commitSetDeviceLocations = commit(mutations.setDeviceLocations);
+export const commitSetDeviceTypes = commit(mutations.setDeviceTypes);

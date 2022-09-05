@@ -2,7 +2,7 @@
     <v-container fluid>
         <v-card class="ma-3 pa-3 no_blink" id="table_unregistered">
             <v-card-title primary-title>
-                <div class="headline primary--text">Unregistered Sensors</div>
+                <div class="headline primary--text">Unregistered Devices</div>
             </v-card-title>
        
             <div>
@@ -22,7 +22,7 @@
 
                     <template v-slot:cell(actions)="{ detailsShowing, item }" >
                         <!-- Use the built in method from the scoped data to toggle the row details -->
-                        <b-btn @click="toggleDetails(item)">{{ detailsShowing ? 'Close' : 'Register sensor'}}</b-btn>
+                        <b-btn @click="toggleDetails(item)">{{ detailsShowing ? 'Close' : 'Register device'}}</b-btn>
                     </template>
                    
                     
@@ -30,37 +30,37 @@
                         <b-card>
                         <label for="field_input_uuid" class="field_input">UUID: </label>
                         <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
-                        {{sensor_uuid = item.uuid}}    
+                        {{device_uuid = item.uuid}}    
                         </b-form-input>
 
                         <br>
                         
-                        <label for="field_input_sensor_name" class="field_input">Sensor name: </label>
-                        <b-form-input v-model="sensor_name_input" placeholder="Sensor name" class="field_input" id="field_input_sensor_name">
+                        <label for="field_input_device_name" class="field_input">Device name: </label>
+                        <b-form-input v-model="device_name_input" placeholder="Device name" class="field_input" id="field_input_device_name">
                         </b-form-input>
 
-                        <b-form-group id="sensor_select_location" label="Select sensor location:" label-for="sensor_location_selector" class="field_input" >
+                        <b-form-group id="device_select_location" label="Select device location:" label-for="device_location_selector" class="field_input" >
                             <v-select 
                                 
-                                id="sensor_location_selector"  
-                                v-model="sensor_location_input" 
-                                :options="sensor_locations" 
+                                id="device_location_selector"  
+                                v-model="device_location_input" 
+                                :options="device_locations" 
                                 required 
-                                placeholder="Select sensor_location"  
+                                placeholder="Select device location"  
                                 
                             >
 
                             </v-select>
-                            <div v-if="sensor_location_input != null">
-                                location selected: {{sensor_location_input.label}} 
+                            <div v-if="device_location_input != null">
+                                location selected: {{device_location_input.label}} 
                                 <br>
-                                description:  {{sensor_location_input.description}}
+                                description:  {{device_location_input.description}}
                             </div>
                         </b-form-group>
 
                         <br>
 
-                        <b-button variant="primary" v-on:click = "register_sensor" v-bind:disabled="register_button_inactive">Register</b-button>
+                        <b-button variant="primary" v-on:click = "register_device" v-bind:disabled="register_button_inactive">Register</b-button>
                     
                         </b-card>
                     </template>
@@ -69,7 +69,7 @@
         </v-card>
         <v-card class="ma-3 pa-3 no_blink" id="table_registered">
             <v-card-title primary-title>
-                <div class="headline primary--text">Registered Sensors</div>
+                <div class="headline primary--text">Registered Devices</div>
             </v-card-title>
             <div>
                 <b-table striped hover sort-icon-left
@@ -92,14 +92,14 @@
 
                     <template v-slot:cell(actions)="{ detailsShowing, item }">                        
                         <v-icon class="registered_icons" @click="toggleDetailsRegistered(item)">{{ detailsShowing ? 'close' : 'edit'}}</v-icon>
-                        <v-icon class="registered_icons" @click="deleteSensor(item)">delete</v-icon>
+                        <v-icon class="registered_icons" @click="deleteDevice(item)">delete</v-icon>
                     </template>
 
                     <template v-slot:row-details="{ item }">
                         <b-card>
                         <label for="field_input_uuid" class="field_input">UUID: </label>
                         <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
-                        {{sensor_uuid = item.uuid}}    
+                        {{device_uuid = item.uuid}}    
                         </b-form-input>
 
                         <br>
@@ -123,36 +123,36 @@
     import api from "@/api"
     import { mapState } from 'vuex';
     import { 
-        dispatchedGetNotRegisteredSensors, 
-        dispatchRegisterSensor, 
-        dispatchSensorLocations,
-        dispatchSensorTypes,
-        dispatchedGetAwailableSensors 
+        dispatchGetNotRegisteredDevices, 
+        dispatchRegisterDevice, 
+        dispatchDeviceLocations,
+        dispatchDeviceTypes,
+        dispatchGetAwailableDevices 
         } from '@/store/main/actions';
     import { 
-        readNotRegisteredSensors, 
-        readSensorLocations,
-        readSensorTypes,
-        readAvailableSensors 
+        readNotRegisteredDevices, 
+        readDeviceLocations,
+        readDeviceTypes,
+        readAvailableDevices
         } from '@/store/main/getters';
 
     Vue.component('v-select', vSelect);
     export default { 
  
     methods: {
-        register_sensor: function(){
+        register_device: function(){
             this.is_type_updated = false 
             this.is_location_updated = false  
             this.register_button_inactive = true
-            let register_sensor_obj = {
-                "uuid": this.sensor_uuid,
-                "name": this.sensor_name_input,
-                "location": this.sensor_location_input.id
+            let register_device_obj = {
+                "uuid": this.device_uuid,
+                "name": this.device_name_input,
+                "location": this.device_location_input.id
             }
-            // perform api call to register sensor
-            dispatchRegisterSensor(this.$store, register_sensor_obj)
+            // perform api call to register device
+            dispatchRegisterDevice(this.$store, register_device_obj)
             
-            console.log(register_sensor_obj)
+            console.log(register_device_obj)
         },
 
         //finds a specific item based on the provided ID and toggles details on that item
@@ -187,28 +187,28 @@
             }
         },
         typeUpdate() {
-            // iterate over the all sensors
+            // iterate over the all devices
             console.log("typeUpdate()")
             
-            let unreg_sensors_arr = JSON.parse(JSON.stringify(this.table_items));
-            console.log("unreg_sensors_arr: " + JSON.stringify(unreg_sensors_arr))
+            let unreg_devices_arr = JSON.parse(JSON.stringify(this.table_items));
+            console.log("unreg_devices_arr: " + JSON.stringify(unreg_devices_arr))
             for (let [index, val] of this.table_items.entries()) {
-                unreg_sensors_arr[index].type = this.getTypeAttrById(val.type)  
+                unreg_devices_arr[index].type = this.getTypeAttrById(val.type)  
             }
-            this.table_items = unreg_sensors_arr
+            this.table_items = unreg_devices_arr
 
-            let registered_sensors_arr = JSON.parse(JSON.stringify(this.table_items_registered));
+            let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
             for (let [index, val] of this.table_items_registered.entries()) {
-                registered_sensors_arr[index].type = this.getTypeAttrById(val.type)  
+                registered_devices_arr[index].type = this.getTypeAttrById(val.type)  
             }
-            this.table_items_registered = registered_sensors_arr
+            this.table_items_registered = registered_devices_arr
             
         },
        
         getTypeAttrById(id) {
-            // iterate over the all sensor types. When found - return name, else return id
+            // iterate over the all device_types. When found - return name, else return id
             let type_by_id;
-            for (let item of this.sensor_types) {
+            for (let item of this.device_types) {
                 if (item.type_id === id) {
                     type_by_id = item.name
                     break
@@ -221,17 +221,17 @@
         },
 
         locationUpdate() {
-            let registered_sensors_arr = JSON.parse(JSON.stringify(this.table_items_registered));
+            let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
             for (let [index, val] of this.table_items_registered.entries()) {
-                registered_sensors_arr[index].location = this.getLocationAttrById(val.location)  
+                registered_devices_arr[index].location = this.getLocationAttrById(val.location)  
             }
-            this.table_items_registered = registered_sensors_arr
+            this.table_items_registered = registered_devices_arr
         },
 
         getLocationAttrById(id) {
-            // iterate over the all sensor types. When found - return name, else return id
+            // iterate over the all devices types. When found - return name, else return id
             let location_by_id;
-            for (let item of this.sensor_locations_api) {
+            for (let item of this.device_locations_api) {
                 if (item.location_id === id) {
                     location_by_id = item.name
                     break
@@ -245,7 +245,7 @@
 
         returnTypeToolTip(item_name) {
             let type_descr_by_name;
-            for (let item of this.sensor_types) {
+            for (let item of this.device_types) {
                 if (item.name === item_name) {
                     type_descr_by_name = item.description
                     break
@@ -258,7 +258,7 @@
         }, 
         returnLocationTooltip(item_name) {
             let loc_by_name;
-            for (let item of this.sensor_locations_api) {
+            for (let item of this.device_locations_api) {
                 if (item.name === item_name) {
                     loc_by_name = item.description
                     break
@@ -269,61 +269,61 @@
             }
             return loc_by_name;
         },
-        deleteSensor(item) {
-            console.log("DELETE SENSOR: " + JSON.stringify(item.id))
+        deleteDevice(item) {
+            console.log("DELETE DEVICE: " + JSON.stringify(item.id))
         }
     },
 
    computed: {
         //need to define computed and watch function with the same name to watch vuex changes
-        readNotRegisteredSensors: function(){
-            return readNotRegisteredSensors(this.$store)
+        readNotRegisteredDevices: function(){
+            return readNotRegisteredDevices(this.$store)
         },
-        readAvailableSensors: function(){
-            return readAvailableSensors(this.$store)
+        readAvailableDevices: function(){
+            return readAvailableDevices(this.$store)
         },
-        readSensorLocations: function(){
-            return readSensorLocations(this.$store)
+        readDeviceLocations: function(){
+            return readDeviceLocations(this.$store)
         },
-        readSensorTypes: function(){
-            return readSensorTypes(this.$store)
+        readDeviceTypes: function(){
+            return readDeviceTypes(this.$store)
         }
         
    },
    
    watch: {
-        readNotRegisteredSensors(newValue, oldValue) {
+        readNotRegisteredDevices(newValue, oldValue) {
             //on vuex parameter change - execute this function
-            var not_registered_sensors_arr = []
+            var not_registered_devices_arr = []
             newValue.forEach(element => {
                 var list_obj = {uuid: element.uuid, first_occurrence: element.first_occurrence, type: element.type}
-                not_registered_sensors_arr.push(list_obj)
+                not_registered_devices_arr.push(list_obj)
             });
 
-            this.table_items = not_registered_sensors_arr
+            this.table_items = not_registered_devices_arr
             this.register_button_inactive = false
             // this.typeUpdate()
             this.is_type_updated = false
         },
-        readAvailableSensors(newValue, oldValue) {
+        readAvailableDevices(newValue, oldValue) {
             //on vuex parameter change - execute this function
             this.table_items_registered = newValue
         },
-        readSensorLocations(newValue, oldValue) {
+        readDeviceLocations(newValue, oldValue) {
             //on vuex parameter change - execute this function
-            this.sensor_locations_api = newValue
+            this.device_locations_api = newValue
 
-            var sensor_locations_arr = []
+            var device_locations_arr = []
             newValue.forEach(element => {
                 var list_obj = {label: element.name, id: element.location_id, description: element.description}
-                sensor_locations_arr.push(list_obj)
+                device_locations_arr.push(list_obj)
             });
             
-            this.sensor_locations = sensor_locations_arr
+            this.device_locations = device_locations_arr
         },
-        readSensorTypes(newValue, oldValue) {
+        readDeviceTypes(newValue, oldValue) {
             //on vuex parameter change - execute this function
-            this.sensor_types = newValue
+            this.device_types = newValue
         },
         
     },
@@ -332,13 +332,13 @@
         return {
             register_button_inactive: false,
 
-            sensor_uuid: '',
-            sensor_name_input: '',
-            sensor_location_input: null,
+            device_uuid: '',
+            device_name_input: '',
+            device_location_input: null,
 
-            sensor_locations: [],
-            sensor_locations_api: [],
-            sensor_types: [],
+            device_locations: [],
+            device_locations_api: [],
+            device_types: [],
             
             nonRegSortBy: 'first_occurrence',
             regSortBy: 'date_registered',
@@ -365,17 +365,17 @@
                 {key: 'actions', label: 'Actions'},
             ],
             table_items_registered: [],
-            not_registered_sensors: false,
+            not_registered_devices: false,
            
         }
     },
   
     mounted() {
-        //called for initiate the list of sensors load from api 
-        dispatchedGetNotRegisteredSensors(this.$store)
-        dispatchSensorLocations(this.$store)
-        dispatchSensorTypes(this.$store)
-        dispatchedGetAwailableSensors(this.$store)
+        // called for initiate the list of devices load from api 
+        dispatchGetNotRegisteredDevices(this.$store)
+        dispatchDeviceLocations(this.$store)
+        dispatchDeviceTypes(this.$store)
+        dispatchGetAwailableDevices(this.$store)
     },
 
     beforeDestroy() {
@@ -384,10 +384,10 @@
     },
 
     updated() { 
-        // when all items loaded and not null - update sensor type to string format (sensor_type is another api)
+        // when all items loaded and not null - update device type to string format (device_type is another api)
         console.log('updated()')
         try { 
-            if (this.table_items[0].type != null && this.sensor_types[0].type_id != null && this.table_items_registered[0].type != null && !this.is_type_updated) {
+            if (this.table_items[0].type != null && this.device_types[0].type_id != null && this.table_items_registered[0].type != null && !this.is_type_updated) {
                 this.typeUpdate()
                 this.is_type_updated = true
             }
@@ -397,7 +397,7 @@
         }
 
         try { 
-            if (this.sensor_locations_api[0].location_id != null && this.table_items_registered[0].location && !this.is_location_updated) {
+            if (this.device_locations_api[0].location_id != null && this.table_items_registered[0].location && !this.is_location_updated) {
                 this.locationUpdate()
                 this.is_location_updated = true
             }

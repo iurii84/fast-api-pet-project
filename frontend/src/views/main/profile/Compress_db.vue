@@ -23,15 +23,15 @@
         
         <div>
             <b-form id='compress_db_form' @submit.stop.prevent="compress_db"  >
-                <b-form-group id="sensor_select" label="Select sensor:" label-for="sensor_select_form" >
+                <b-form-group id="device_select" label="Select device:" label-for="device_select_form" >
                     <v-select 
                         
-                        id="sensor_select_form"  
-                        v-model="selected_sensor" 
-                        :options="sensor_select" 
+                        id="device_select_form"  
+                        v-model="selected_device" 
+                        :options="device_select" 
                         required 
-                        placeholder="Select sensor"  
-                        @open="on_open_sensor_selector"
+                        placeholder="Select device"  
+                        @open="on_open_device_selector"
                     >
 
                     </v-select>
@@ -126,8 +126,8 @@
 
 <script>
 import { Store } from 'vuex';
-import { readAvailableSensors, readCompressDb } from '@/store/main/getters';
-import { dispatchedGetAwailableSensors, dispatchedCompressDb } from '@/store/main/actions';
+import { readAvailableDevices, readCompressDb } from '@/store/main/getters';
+import { dispatchGetAwailableDevices, dispatchedCompressDb } from '@/store/main/actions';
 import Vue from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
@@ -145,7 +145,7 @@ export default {
                 "start_date_time": this.value_date_from + " " + this.time_value_from,
                 "end_date_time": this.value_date_to + " " + this.time_value_to,
                 "for_items_with_compress_ratio": this.compress_ratio,
-                "uuid": this.selected_sensor.value
+                "uuid": this.selected_device.value
             }
            
             console.log(compress_payload)
@@ -156,23 +156,23 @@ export default {
 
         },
 
-        get_sensor_list() {
-            //get sensors from api and parse it for Vue Select
-            var parsedobj = JSON.parse(JSON.stringify(readAvailableSensors(this.$store)))
-            var sensor_list_array = []
+        get_device_list() {
+            // get devices from api and parse it for Vue Select
+            var parsedobj = JSON.parse(JSON.stringify(readAvailableDevices(this.$store)))
+            var device_list_array = []
         
             parsedobj.forEach(element => {
                 var list_obj = {value: element.uuid, label: element.name}
-                sensor_list_array.push(list_obj)
+                device_list_array.push(list_obj)
             });
-            this.sensor_select = sensor_list_array
+            this.device_select = device_list_array
 
         },
 
-        on_open_sensor_selector () {
+        on_open_device_selector () {
             //defined in template part
-            //triggered each time when select_sensor is opened
-            this.get_sensor_list()
+            //triggered each time when select_device is opened
+            this.get_device_list()
         },
 
        
@@ -206,17 +206,17 @@ export default {
             button_inactive: true,
             compress_ratio: 0,
             show: true,
-            selected_sensor: "",
-            sensors_get_result: [],
-            sensor_select: [],
+            selected_device: "",
+            
+            device_select: [],
             response_compress_db: '',
             showDismissibleAlert: false
         }
     },
   
     mounted() {
-        //called for initiate the list of sensors load from api 
-        dispatchedGetAwailableSensors(this.$store)
+        // called for initiate the list of devices load from api 
+        dispatchGetAwailableDevices(this.$store)
         
     },
 
@@ -227,7 +227,7 @@ export default {
 
     updated() {
         if (this.spinner_visible == false) {
-            if (this.value_date_from != "" & this.value_date_to != "" & this.time_value_from != "" & this.time_value_to != "" & this.selected_sensor != "" ) {
+            if (this.value_date_from != "" & this.value_date_to != "" & this.time_value_from != "" & this.time_value_to != "" & this.selected_device != "" ) {
                 this.button_inactive=false;
             }    
         }    
@@ -247,7 +247,7 @@ export default {
     padding: 20px;
 }
 
-#sensor_select {
+#device_select {
     padding-bottom: 3%;
 }
 

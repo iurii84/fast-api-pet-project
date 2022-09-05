@@ -22,7 +22,7 @@ export interface IUserProfileCreate {
     is_superuser?: boolean;
 }
 
-export interface ISensorAvailableList {
+export interface IDeviceAvailableList {
     id: number;
     uuid: string;
     name: string;
@@ -48,19 +48,19 @@ export interface ICompressResponse {
     db_delete: number;
 }
 
-export interface ISensorNotRegisteredList {
+export interface IDeviceNotRegisteredList {
     uuid: string;
     type: number;
     first_occurrence: string;
 }
 
-export interface ISensorRegisterPost {
+export interface IDeviceRegisterPost {
     uuid: string;
     name: string;
     location: number;
 }
 
-export interface ISensorRegisterResponse {
+export interface IDeviceRegisterResponse {
     name: string;
     type: number;
     location: number;
@@ -70,13 +70,13 @@ export interface ISensorRegisterResponse {
     first_occurrence: string;
 }
 
-export interface ISensorLocationResponse {
+export interface IDeviceLocationResponse {
     id: number;
     name: string;
     description: string;
 }
 
-export interface ISensorTypeResponse {
+export interface IDeviceTypeResponse {
     id: number;
     name: string;
     description: string;
