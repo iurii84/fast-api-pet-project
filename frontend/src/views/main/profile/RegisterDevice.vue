@@ -5,7 +5,7 @@
                 <div class="headline primary--text">Unregistered Devices</div>
             </v-card-title>
 
-            <b-modal ref="delete-device-confirm" hide-footer title="You are about to delete following device from database:">
+            <b-modal size="lg" title-tag="h4" ref="delete-device-confirm" hide-footer title="You are about to delete following device from the database:">
                 <div class="d-block text-center">
                     
                     <div class="device_to_delete_fields">
@@ -36,8 +36,12 @@
                     </div>
                      
                 </div>
-                <b-button class="mt-3" variant="info" block @click="abortDeletingDevice">Abort</b-button>
-                <b-button class="mt-3" variant="danger" block @click="deleteDeviceAfterConfirm">Delete</b-button>
+                <hr>
+                <div id="delete-decision-buttons-group">
+                    <b-button class="mt-3 decision-button" variant="primary" block @click="abortDeletingDevice">Cancel</b-button>
+                    <b-button class="mt-3 decision-button" variant="danger" block @click="deleteDeviceAfterConfirm">Delete</b-button>
+                </div>
+                
             </b-modal>
        
             <div>
@@ -480,6 +484,14 @@
 
 .device_to_delete_fields {
     text-align: left;
+}
+
+#delete-decision-buttons-group {
+    text-align: right;
+}
+
+.decision-button {
+    margin-right: 10px;
 }
 
 </style>
