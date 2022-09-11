@@ -31,11 +31,17 @@ class RegisterDevice(SensorBase):
     location: Union[None, int]
 
 
+class PatchDevice(BaseModel):
+    name: Union[None, str]
+    location: Union[None, int]
+
+
 class RegisterDeviceReturn:
     id: Union[None, int]
 
 
 class DeleteDeviceReturn(BaseModel):
     id: Union[None, int]
+
     class Config:
         orm_mode = True
