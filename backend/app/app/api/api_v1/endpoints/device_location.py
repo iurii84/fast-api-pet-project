@@ -10,9 +10,9 @@ router = APIRouter()
 
 
 @router.get("", response_model=List[schemas.DeviceLocationBase])
-def get_sensor_locations(db: Session = Depends(deps.get_db),
-                         skip: int = 0,
-                         limit: int = 10) -> Any:
+async def get_sensor_locations(db: Session = Depends(deps.get_db),
+                               skip: int = 0,
+                               limit: int = 10) -> Any:
     sensor_locations = crud.device_location.get_multi(db,
                                                       skip=skip,
                                                       limit=limit)
