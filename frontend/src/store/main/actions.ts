@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { IDeviceUpdate } from '@/interfaces';
 import router from '@/router';
 import { getLocalToken, removeLocalToken, saveLocalToken } from '@/utils';
 import { AxiosError } from 'axios';
@@ -18,7 +19,8 @@ import {
     commitRegisterDevice,
     commitSetDeviceLocations,
     commitSetDeviceTypes,
-    commitDeleteDevice
+    commitDeleteDevice,
+    commitUpdateDevice,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -218,6 +220,22 @@ export const actions = {
         }
     },
 
+    async actionUpdateDevice(context: MainContext, data) {
+        try {
+            const response = (await Promise.all([
+                api.updateDevice(context.state.token, data.payload, data.device_id),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitUpdateDevice(context, response.data);
+            commitAddNotification(context, { content: 'Device ' + response.data.uuid + ' successfully updated!', color: 'success' });
+            
+            // update list of registered devices
+            dispatchGetAwailableDevices(context)
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+
     async actionDeleteDevice(context: MainContext, device_id: number) {
         try {
             const response = (await Promise.all([
@@ -281,5 +299,6 @@ export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
 export const dispatchGetNotRegisteredDevices = dispatch(actions.actionGetNotRegisteredDevices);
 export const dispatchRegisterDevice = dispatch(actions.actionRegisterDevice);
 export const dispatchDeleteDevice = dispatch(actions.actionDeleteDevice);
+export const dispatchUpdateDevice = dispatch(actions.actionUpdateDevice);
 export const dispatchDeviceLocations = dispatch(actions.actionGetDeviceLocations);
 export const dispatchDeviceTypes = dispatch(actions.actionGetDeviceTypes);

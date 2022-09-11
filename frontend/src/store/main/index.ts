@@ -17,6 +17,7 @@ const defaultState: MainState = {
   notRegisteredDevices: [],
   registerDevice: null,
   deleteDevice: null,
+  updateDevice: null,
   deviceLocations: [],
   deviceTypes: []
 };

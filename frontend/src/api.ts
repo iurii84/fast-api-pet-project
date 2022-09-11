@@ -12,7 +12,8 @@ import {
   IDeviceRegisterPost,
   IDeviceLocationResponse,
   IDeviceTypeResponse,
-  IDeviceDeleteResponse
+  IDeviceDeleteResponse,
+  IDeviceUpdate
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -24,6 +25,9 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async updateDevice(token: string, data: IDeviceUpdate, deviceId: number) { 
+    return axios.patch(`${apiUrl}/api/v1/device/${deviceId}`, data);
+  },
   async deleteDevice(token: string, deviceId: number) { 
     return axios.delete(`${apiUrl}/api/v1/device/${deviceId}`);
   },

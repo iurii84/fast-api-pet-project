@@ -6,7 +6,8 @@ import {
     IDeviceRegisterResponse, 
     IDeviceLocationResponse,
     IDeviceTypeResponse,
-    IDeviceDeleteResponse
+    IDeviceDeleteResponse,
+    IDeviceUpdateResponse
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -29,6 +30,7 @@ export interface MainState {
     notRegisteredDevices: IDeviceNotRegisteredList[];
     registerDevice: IDeviceRegisterResponse | null;
     deleteDevice: IDeviceDeleteResponse | null;
+    updateDevice: IDeviceUpdateResponse | null;
     deviceLocations: IDeviceLocationResponse[];
     deviceTypes: IDeviceTypeResponse[];
 }

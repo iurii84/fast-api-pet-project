@@ -20,7 +20,8 @@ export const getters = {
     compress_db: (state: MainState) => state.compressDbResponse,
     not_registered_devices: (state: MainState) => state.notRegisteredDevices,
     device_locations: (state: MainState) => state.deviceLocations,
-    device_types: (state: MainState) => state.deviceTypes
+    device_types: (state: MainState) => state.deviceTypes,
+    device_update_response: (state: MainState) => state.updateDevice
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -39,3 +40,4 @@ export const readCompressDb = read(getters.compress_db);
 export const readNotRegisteredDevices = read(getters.not_registered_devices);
 export const readDeviceLocations = read(getters.device_locations);
 export const readDeviceTypes = read(getters.device_types);
+export const readDeviceUpdateResponse = read(getters.device_update_response);

@@ -85,3 +85,18 @@ export interface IDeviceTypeResponse {
 export interface IDeviceDeleteResponse {
     id: number;
 }
+
+export interface IDeviceUpdateResponse {
+    name: string;
+    type: number;
+    location: number;
+    date_registered: string;
+    id: number;
+    uuid: string;
+    first_occurrence: string;
+}
+
+export interface IDeviceUpdate {
+    name: string;
+    location: number;
+}

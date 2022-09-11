@@ -75,7 +75,7 @@
                         <br>
                         
                         <label for="field_input_device_name" class="field_input">Device name: </label>
-                        <b-form-input v-model="device_name_input" placeholder="Device name" class="field_input" id="field_input_device_name">
+                        <b-form-input v-model="device_name_input" placeholder="Device name" class="field_input  blink" id="field_input_device_name">
                         </b-form-input>
 
                         <b-form-group id="device_select_location" label="Select device location:" label-for="device_location_selector" class="field_input" >
@@ -91,7 +91,6 @@
 
                             </v-select>
                             <div v-if="device_location_input != null">
-                                location selected: {{device_location_input.label}} 
                                 <br>
                                 description:  {{device_location_input.description}}
                             </div>
@@ -135,14 +134,47 @@
                     </template>
 
                     <template v-slot:row-details="{ item }">
+                     
                         <b-card>
-                        <label for="field_input_uuid" class="field_input">UUID: </label>
-                        <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
-                        {{device_uuid = item.uuid}}    
-                        </b-form-input>
 
-                        <br>
-                        
+                            <label for="field_input_id" class="field_input">ID: </label>
+                            <b-form-input v-model="item.id"  disabled class="field_input" id="field_input_id"> 
+                                {{device_update_id = item.id}}    
+                            </b-form-input>
+
+
+                            <label for="field_input_uuid" class="field_input">UUID: </label>
+                            <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
+                            </b-form-input>
+
+                            <b-form-group id="device_select_location" label="Select device location:" label-for="device_location_selector" class="field_input" >
+                                
+                               
+                                <v-select 
+                                    
+                                    id="device_location_selector"  
+                                    v-model="device_update_location_input" 
+                                    :options="device_locations" 
+                                    required 
+                                    placeholder="Select device location"       
+                                >
+                                </v-select>
+                              
+                                
+                                <div v-if="device_location_input != null">
+                                    <br>
+                                    description:  {{device_update_location_input.description}}
+                                </div>
+                            </b-form-group>
+
+                            <label for="field_input_name" class="field_input">Name: </label>
+                            <b-form-input v-model="item.name"   class="field_input  blink" id="field_input_name"> 
+                                {{device_update_name_input = item.name}}
+                            </b-form-input>
+
+                            <br>
+
+                            <b-button variant="primary" v-on:click = "update_device" v-bind:disabled="update_button_inactive">Update</b-button>
                         
                         </b-card>
                     </template> 
@@ -164,6 +196,7 @@
     import { 
         dispatchGetNotRegisteredDevices, 
         dispatchRegisterDevice, 
+        dispatchUpdateDevice,
         dispatchDeleteDevice,
         dispatchDeviceLocations,
         dispatchDeviceTypes,
@@ -173,16 +206,15 @@
         readNotRegisteredDevices, 
         readDeviceLocations,
         readDeviceTypes,
-        readAvailableDevices
+        readAvailableDevices,
+        readDeviceUpdateResponse
         } from '@/store/main/getters';
 
     Vue.component('v-select', vSelect);
     export default { 
  
     methods: {
-        register_device: function(){
-            this.is_type_updated = false 
-            this.is_location_updated = false  
+        register_device: function(){  
             this.register_button_inactive = true
             let register_device_obj = {
                 "uuid": this.device_uuid,
@@ -193,6 +225,16 @@
             dispatchRegisterDevice(this.$store, register_device_obj)
             
             console.log(register_device_obj)
+        },
+
+        update_device: function(){
+            this.update_button_inactive = true;
+            let update_device_obj = {
+                "name": this.device_update_name_input,
+                "location": this.device_update_location_input.id
+            }
+            dispatchUpdateDevice(this.$store, {"payload": update_device_obj, "device_id": this.device_update_id})
+            console.log(update_device_obj)
         },
 
         //finds a specific item based on the provided ID and toggles details on that item
@@ -229,19 +271,27 @@
         typeUpdate() {
             // iterate over the all devices
             console.log("typeUpdate()")
-            
-            let unreg_devices_arr = JSON.parse(JSON.stringify(this.table_items));
-            console.log("unreg_devices_arr: " + JSON.stringify(unreg_devices_arr))
-            for (let [index, val] of this.table_items.entries()) {
-                unreg_devices_arr[index].type = this.getTypeAttrById(val.type)  
-            }
-            this.table_items = unreg_devices_arr
+            try { 
+                if (this.table_items[0].type != null && this.device_types[0].type_id != null && this.table_items_registered[0].type != null) {
+                    let unreg_devices_arr = JSON.parse(JSON.stringify(this.table_items));
+                    console.log("unreg_devices_arr: " + JSON.stringify(unreg_devices_arr))
+                    for (let [index, val] of this.table_items.entries()) {
+                        unreg_devices_arr[index].type = this.getTypeAttrById(val.type)  
+                    }
+                    this.table_items = unreg_devices_arr
 
-            let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
-            for (let [index, val] of this.table_items_registered.entries()) {
-                registered_devices_arr[index].type = this.getTypeAttrById(val.type)  
+                    let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
+                    for (let [index, val] of this.table_items_registered.entries()) {
+                        registered_devices_arr[index].type = this.getTypeAttrById(val.type)  
+                    }
+                    this.table_items_registered = registered_devices_arr
+                }
+            
             }
-            this.table_items_registered = registered_devices_arr
+            catch (err) {
+            }
+            
+           
             
         },
        
@@ -261,11 +311,18 @@
         },
 
         locationUpdate() {
-            let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
-            for (let [index, val] of this.table_items_registered.entries()) {
-                registered_devices_arr[index].location = this.getLocationAttrById(val.location)  
+            try { 
+                if (this.device_locations_api[0].location_id != null && this.table_items_registered[0].location) {
+                     let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
+                    for (let [index, val] of this.table_items_registered.entries()) {
+                        registered_devices_arr[index].location = this.getLocationAttrById(val.location)  
+                    }
+                    this.table_items_registered = registered_devices_arr
+                }
+                
             }
-            this.table_items_registered = registered_devices_arr
+            catch (err) {
+            }   
         },
 
         getLocationAttrById(id) {
@@ -309,6 +366,23 @@
             }
             return loc_by_name;
         },
+        // setLocationObjByName(location_name) { 
+        //     let obj_by_name;
+        //     if (!this.location_pushed) {
+        //         console.log(location_name)
+        //         for (let item of this.device_locations) {
+        //             console.log(item.label)
+        //             if (item.label === location_name) {
+        //                 obj_by_name = item
+        //                 break
+        //             } 
+        //         }
+        //     }
+            
+            
+        //     this.device_update_location_input =  obj_by_name;
+        //     this.location_pushed = true
+        // },
         deleteDevice(item) {
             this.device_selected_to_delete = item
             console.log("DEVICE SELECTED TO DELETE: " + JSON.stringify(item.id))
@@ -341,8 +415,10 @@
         },
         readDeviceTypes: function(){
             return readDeviceTypes(this.$store)
+        },
+        readDeviceUpdateResponse: function(){
+            return readDeviceUpdateResponse(this.$store)
         }
-        
    },
    
    watch: {
@@ -356,12 +432,13 @@
 
             this.table_items = not_registered_devices_arr
             this.register_button_inactive = false
-            // this.typeUpdate()
-            this.is_type_updated = false
+            this.typeUpdate()
         },
         readAvailableDevices(newValue, oldValue) {
             //on vuex parameter change - execute this function
             this.table_items_registered = newValue
+            this.typeUpdate()
+            this.locationUpdate()
         },
         readDeviceLocations(newValue, oldValue) {
             //on vuex parameter change - execute this function
@@ -372,12 +449,17 @@
                 var list_obj = {label: element.name, id: element.location_id, description: element.description}
                 device_locations_arr.push(list_obj)
             });
-            
             this.device_locations = device_locations_arr
+            this.locationUpdate()
         },
         readDeviceTypes(newValue, oldValue) {
             //on vuex parameter change - execute this function
             this.device_types = newValue
+            this.typeUpdate()
+        },
+        readDeviceUpdateResponse(newValue, oldValue) {
+            //on vuex parameter change - execute this function
+            this.update_button_inactive = false
         },
         
     },
@@ -385,10 +467,16 @@
     data() {
         return {
             register_button_inactive: false,
+            update_button_inactive: false,
 
             device_uuid: '',
             device_name_input: '',
             device_location_input: null,
+
+            device_update_id: '',
+            device_update_name_input: '',
+            device_update_location_input: null,
+            // location_pushed: false,
 
             device_locations: [],
             device_locations_api: [],
@@ -398,10 +486,7 @@
             regSortBy: 'date_registered',
             nonRegSortDesc: false,
             regSortDesc: true,
-
-            is_type_updated: false,
-            is_location_updated: false,
-
+          
             currentItems: [],
             currentItems_registered: [],
             table_fields: [
@@ -435,32 +520,10 @@
     },
 
     beforeDestroy() {
-        this.is_type_updated = false 
-        this.is_location_updated = false 
     },
 
     updated() { 
         // when all items loaded and not null - update device type to string format (device_type is another api)
-        console.log('updated()')
-        try { 
-            if (this.table_items[0].type != null && this.device_types[0].type_id != null && this.table_items_registered[0].type != null && !this.is_type_updated) {
-                this.typeUpdate()
-                this.is_type_updated = true
-            }
-            
-        }
-        catch (err) {
-        }
-
-        try { 
-            if (this.device_locations_api[0].location_id != null && this.table_items_registered[0].location && !this.is_location_updated) {
-                this.locationUpdate()
-                this.is_location_updated = true
-            }
-            
-        }
-        catch (err) {
-        }
     }
 }
 </script>
@@ -476,6 +539,9 @@
 
 .no_blink {
     caret-color: transparent;
+}
+.blink {
+    caret-color: black;
 }
 .registered_icons {
     margin-right: 30px
