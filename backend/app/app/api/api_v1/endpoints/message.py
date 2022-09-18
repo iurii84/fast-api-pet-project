@@ -1,3 +1,6 @@
+import json
+
+from starlette.websockets import WebSocket
 from typing import Any, List
 
 from fastapi import APIRouter, Depends
@@ -5,6 +8,8 @@ from sqlalchemy.orm import Session
 
 from app import schemas, crud
 from app.api import deps
+
+from app.worker import compress_db
 
 router = APIRouter()
 
@@ -33,8 +38,20 @@ async def get_messages(db: Session = Depends(deps.get_db),
 
 @router.post("/compress_after_date_time")
 async def compress_after_date_time(
-        msg: schemas.MessageCompress,
-        db: Session = Depends(deps.get_db)
+        msg: schemas.MessageCompress
 ) -> Any:
-    result = crud.message.compress_data(obj_in=msg, db=db)
-    return result
+    task = compress_db.delay(**msg.__dict__)
+    # return task.get(timeout=20)
+    return task.id
+
+
+@router.websocket("/compress_after_date_time")
+async def compress_after_date_time(
+        websocket: WebSocket) -> Any:
+    await websocket.accept()
+
+    while True:
+        data = await websocket.receive_json()
+        task = compress_db.delay(**data)
+        await websocket.send_json(task.get(timeout=20))
+

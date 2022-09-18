@@ -1,5 +1,9 @@
 from celery import Celery
 
-celery_app = Celery("worker", broker="amqp://guest@queue//")
+app = Celery('tasks', backend='redis://redis:6379/0', broker="amqp://guest@queue//")
 
-celery_app.conf.task_routes = {"app.worker.test_celery": "main-queue"}
+app.conf.task_routes = {"app.worker.test_celery": "main-queue"}
+app.conf.task_routes = {"app.worker.add": "main-queue"}
+app.conf.task_routes = {"app.worker.compress_db": "main-queue"}
+
+

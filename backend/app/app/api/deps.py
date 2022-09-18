@@ -17,6 +17,7 @@ reusable_oauth2 = OAuth2PasswordBearer(
 
 
 def get_db() -> Generator:
+    db = None
     try:
         db = SessionLocal()
         yield db

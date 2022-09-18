@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.api_v1.endpoints import items, login, users, utils, message, device, device_location, device_type
+from app.api.api_v1.endpoints import items, login, users, utils, message, device, device_location, device_type, task
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
@@ -11,3 +11,4 @@ api_router.include_router(message.router, prefix="/message", tags=["message"])
 api_router.include_router(device.router, prefix="/device", tags=["device"])
 api_router.include_router(device_location.router, prefix="/device_location", tags=["device_location"])
 api_router.include_router(device_type.router, prefix="/device_type", tags=["device_type"])
+api_router.include_router(task.router, prefix="/task", tags=["task"])
