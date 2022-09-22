@@ -13,4 +13,6 @@ class DeviceType(Base):
     type_id = Column(Integer, primary_key=True, index=True)
     name = Column(postgresql.VARCHAR(50), nullable=False)
     description = Column(postgresql.TEXT, nullable=True)
+    screen_type = Column(postgresql.SMALLINT, nullable=True, default=None)
+    json = Column(postgresql.JSON, nullable=True, default={})
 
