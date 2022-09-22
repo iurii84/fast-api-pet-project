@@ -4,22 +4,41 @@ from typing import List
 from sqlalchemy import func, and_
 from sqlalchemy.orm import Session
 
+import json
+
 from app.crud.base import CRUDBase
+from app.db.redis_connection import redis_previous_device_data
 from app.models import Message
 
 
 class CRUDMessage(CRUDBase[Message, Message, Message]):
     def create(self, db: Session, *, obj_in: Message) -> Message:
+        obj_dict = obj_in.__dict__
         db_obj = Message(
-            uuid=obj_in.uuid,
-            temp=obj_in.temp,
-            hum=obj_in.hum,
-            created=datetime.now(),
-            type=obj_in.type
+            **obj_dict,
+            created=datetime.now()
+
         )
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
+
+        uuid = str(obj_in.uuid)
+
+        # get value from redis
+        try:
+            res = json.loads(redis_previous_device_data.get(uuid))
+            for item in res:
+                if obj_dict[item] != res[item]:
+                    print(f"Notify observers for changed value for {item} in {uuid}")
+        except TypeError:
+            print("Data is not found in Redis")
+
+
+        # update value in redis
+        obj_dict.pop("uuid")
+        redis_previous_device_data.set(uuid, json.dumps(obj_dict))
+
         return db_obj
 
     def get_multi(
