@@ -40,12 +40,22 @@ export interface ICompressDbPayload {
 }
 
 
+
 export interface ICompressResponse {
-    items_found: number;
-    is_even: boolean;
-    items_selected_to_compress: null;
-    db_update: number;
-    db_delete: number;
+    task_id: string
+}
+
+
+export interface ITaskGetResponse {
+    task_state: string,
+    task: {
+        items_found: number;
+        is_even: boolean;
+        items_selected_to_compress: null;
+        db_update: number;
+        db_delete: number;
+    },
+    task_message: string
 }
 
 export interface IDeviceNotRegisteredList {

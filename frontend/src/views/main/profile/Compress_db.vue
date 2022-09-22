@@ -127,7 +127,7 @@
 <script>
 import { Store } from 'vuex';
 import { readAvailableDevices, readCompressDb } from '@/store/main/getters';
-import { dispatchGetAwailableDevices, dispatchedCompressDb } from '@/store/main/actions';
+import { dispatchGetAwailableDevices, dispatchCompressDb, dispatchGetTask } from '@/store/main/actions';
 import Vue from 'vue';
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
@@ -149,7 +149,7 @@ export default {
             }
            
             console.log(compress_payload)
-            dispatchedCompressDb(this.$store, compress_payload)
+            dispatchCompressDb(this.$store, compress_payload)
            
             this.spinner_visible=true
             this.button_inactive=true
@@ -188,6 +188,7 @@ export default {
    watch: {
         compressDbResponse(newValue, oldValue) {
             //on vuex parameter change - execute this function
+            dispatchGetTask(this.$store, newValue.task_id)
             this.showDismissibleAlert = true
             this.response_compress_db = newValue.items_selected_to_compress
             this.spinner_visible=false

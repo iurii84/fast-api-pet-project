@@ -13,7 +13,8 @@ import {
   IDeviceLocationResponse,
   IDeviceTypeResponse,
   IDeviceDeleteResponse,
-  IDeviceUpdate
+  IDeviceUpdate,
+  ITaskGetResponse
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -46,8 +47,11 @@ export const api = {
   async getNotRegisteredDevices() { 
     return axios.get<IDeviceNotRegisteredList[]>(`${apiUrl}/api/v1/device/get_unregistered`);
   },
+  async getTask(token: string, task_id: string) {
+    return axios.get<ITaskGetResponse>(`${apiUrl}/api/v1/task/`, { params: { task_id: task_id } });
+  },
   async compressDb(token: string, data: ICompressDbPayload) {
-    return axios.post<ICompressResponse>(`${apiUrl}/api/v1/message/compress_after_date_time`, data);
+    return axios.post<ICompressResponse>(`${apiUrl}/api/v1/message/compress`, data);
   },
 
   async logInGetToken(username: string, password: string) {

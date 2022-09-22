@@ -185,7 +185,7 @@ export const actions = {
             ]))[0];
             commitCompressDb(context, response.data);
             commitRemoveNotification(context, loadingNotification);
-            commitAddNotification(context, { content: 'DB successfully compressed', color: 'success' });
+            commitAddNotification(context, { content: 'DB compress task was successguly created', color: 'success' });
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -276,7 +276,34 @@ export const actions = {
         }
 
     },
+
+    async actionGetTask(context: MainContext, task_id: string) {
+        console.log("dispatchGetTask called")
+        try {
+            let success = false;
+            while (!success) {
+                const response = await api.getTask(context.state.token, task_id);
+                if (response.data) {
+                    if (response.data.task_state != "SUCCESS") {
+                        await delay(5000)
+                    }
+                    else {
+                        success = true
+                        commitAddNotification(context, { content: 'COMPRESS TASK IS FINISHED', color: 'success' });
+                    }
+                }     
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+    
 };
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');
 
@@ -295,10 +322,11 @@ export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 
 export const dispatchGetAwailableDevices = dispatch(actions.actionGetDevices);
-export const dispatchedCompressDb = dispatch(actions.actionCompressDb);
+export const dispatchCompressDb = dispatch(actions.actionCompressDb);
 export const dispatchGetNotRegisteredDevices = dispatch(actions.actionGetNotRegisteredDevices);
 export const dispatchRegisterDevice = dispatch(actions.actionRegisterDevice);
 export const dispatchDeleteDevice = dispatch(actions.actionDeleteDevice);
 export const dispatchUpdateDevice = dispatch(actions.actionUpdateDevice);
 export const dispatchDeviceLocations = dispatch(actions.actionGetDeviceLocations);
 export const dispatchDeviceTypes = dispatch(actions.actionGetDeviceTypes);
+export const dispatchGetTask = dispatch(actions.actionGetTask);
