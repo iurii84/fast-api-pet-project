@@ -4,6 +4,7 @@ from .crud_message import message
 from .crud_device import device
 from .crud_device_location import device_location
 from .crud_device_type import device_type
+from .crud_device_data_bind import device_data_bind
 
 # For a new basic set of CRUD operations you could just do
 
