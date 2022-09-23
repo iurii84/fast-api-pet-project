@@ -2,7 +2,7 @@ import datetime
 
 from typing import Union
 
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, UUID4, Field
 
 
 class SensorBase(BaseModel):
@@ -16,6 +16,8 @@ class Device(SensorBase):
     location: Union[None, int]
     first_occurrence: datetime.datetime
     date_registered: datetime.datetime
+    screen_type: Union[None, int]
+    json_field: Union[None, dict] = Field(alias='json')
 
     class Config:
         orm_mode = True

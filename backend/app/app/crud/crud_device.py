@@ -7,7 +7,7 @@ from sqlalchemy import func, distinct
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
-from app.models import Device,  Message
+from app.models import Device, Message, DeviceType
 
 
 class CRUDDevice(CRUDBase[Device, Device, Device]):
@@ -15,9 +15,23 @@ class CRUDDevice(CRUDBase[Device, Device, Device]):
     def get_multi(
             self, db: Session, *,
             skip: int = 0,
-            limit: int = 10
+            limit: int = 10,
+            is_display: bool = False
     ) -> List[Device]:
-        res = db.query(self.model).offset(skip).limit(limit).all()
+        res = None
+        if is_display:
+            res = db.query(Device.id,
+                           Device.uuid,
+                           Device.location,
+                           Device.date_registered,
+                           Device.name,
+                           Device.type,
+                           Device.first_occurrence,
+                           DeviceType.screen_type,
+                           DeviceType.json).join(DeviceType, Device.type == DeviceType.type_id).\
+                filter(DeviceType.screen_type.is_not(None)).offset(skip).limit(limit).all()
+        else:
+            res = db.query(self.model).offset(skip).limit(limit).all()
         return res
 
     def get_unregistered_devices(self, db: Session) -> List[Device]:
