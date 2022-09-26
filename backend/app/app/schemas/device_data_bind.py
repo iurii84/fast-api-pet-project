@@ -1,14 +1,14 @@
 from typing import Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, UUID4
 
 
 class DeviceDataBindBase(BaseModel):
     id: int
     binder_name: str
-    device_id: int
+    device_uuid: UUID4
     device_prop: str
-    subscriber_id: int
+    subscriber_uuid: UUID4
     char_placeholder: int
 
     class Config:
@@ -17,15 +17,15 @@ class DeviceDataBindBase(BaseModel):
 
 class RegisterDeviceDataBind(BaseModel):
     binder_name: str
-    device_id: int
+    device_uuid: UUID4
     device_prop: str
-    subscriber_id: int
+    subscriber_uuid: UUID4
     char_placeholder: int
 
 
 class PatchDeviceDataBind(BaseModel):
     binder_name: Union[None, str]
-    device_id: Union[None, int]
+    device_uuid: Union[None, UUID4]
     device_prop: Union[None, str]
-    subscriber_id: Union[None, int]
+    subscriber_uuid: Union[None, UUID4]
     char_placeholder: Union[None, int]

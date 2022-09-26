@@ -34,7 +34,6 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
         except TypeError:
             print("Data is not found in Redis")
 
-
         # update value in redis
         obj_dict.pop("uuid")
         redis_previous_device_data.set(uuid, json.dumps(obj_dict))
