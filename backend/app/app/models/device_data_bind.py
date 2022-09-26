@@ -5,6 +5,7 @@ from app.db.base_class import Base
 
 
 class DeviceDataBind(Base):
+
     __tablename__ = 'device_data_bind'
 
     id = Column(postgresql.BIGINT, primary_key=True, index=True)
