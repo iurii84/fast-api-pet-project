@@ -1,3 +1,4 @@
+from pydantic import UUID4
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -18,6 +19,14 @@ async def get_device_data_binds(db: Session = Depends(deps.get_db),
                                                         skip=skip,
                                                         limit=limit)
     return device_data_binds
+
+
+@router.get("/subscribers")
+async def get_device_data_bind_subscribers(uuid: UUID4,
+                                           device_prop: str) -> Any:
+    device_data_bind_subscribers = crud.device_data_bind.get_subscribers(uuid=uuid,
+                                                                         device_prop=device_prop)
+    return device_data_bind_subscribers
 
 
 @router.post("")

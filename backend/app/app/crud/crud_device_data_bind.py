@@ -1,4 +1,6 @@
 from fastapi.encoders import jsonable_encoder
+from pydantic import UUID4
+from sqlalchemy import and_
 from typing import List, Union, Dict, Any
 
 from sqlalchemy.orm import Session
@@ -21,15 +23,30 @@ def cacheable_get_data_binders(skip: int, limit: int):
     return jsonable_encoder(res)
 
 
+@cache.cache()
+def cacheable_get_subscribers(uuid: str, device_prop: str):
+    db = SessionLocal()
+
+    res = db.query(DeviceDataBind).where((and_(DeviceDataBind.device_uuid == uuid,
+                                               DeviceDataBind.device_prop == device_prop))).all()
+
+    db.close()
+    return jsonable_encoder(res)
+
+
 class CRUDDeviceDataBind(CRUDBase[DeviceDataBind, DeviceDataBind, DeviceDataBind]):
 
     def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[DeviceDataBind]:
 
         return cacheable_get_data_binders(skip=skip, limit=limit)
 
+    def get_subscribers(self, uuid: UUID4, device_prop: str):
+        return cacheable_get_subscribers(uuid=str(uuid), device_prop=device_prop)
+
     def create(self, db: Session, *, obj_in: RegisterDeviceDataBind) -> DeviceDataBind:
         # invalidate redis cache
         cacheable_get_data_binders.invalidate_all()
+        cacheable_get_subscribers.invalidate_all()
 
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)  # type: ignore
@@ -47,6 +64,7 @@ class CRUDDeviceDataBind(CRUDBase[DeviceDataBind, DeviceDataBind, DeviceDataBind
     ) -> DeviceDataBind:
         # invalidate redis cache
         cacheable_get_data_binders.invalidate_all()
+        cacheable_get_subscribers.invalidate_all()
 
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
@@ -64,6 +82,7 @@ class CRUDDeviceDataBind(CRUDBase[DeviceDataBind, DeviceDataBind, DeviceDataBind
     def remove(self, db: Session, *, id: int) -> DeviceDataBind:
         # invalidate redis cache
         cacheable_get_data_binders.invalidate_all()
+        cacheable_get_subscribers.invalidate_all()
 
         obj = db.query(self.model).get(id)
         db.delete(obj)

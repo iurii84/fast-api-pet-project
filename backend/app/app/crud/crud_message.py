@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 import json
 
+from app.core.data_bind_subscribers_nitifier import notify_subscribers
 from app.crud.base import CRUDBase
 from app.db.redis_connection import redis_previous_device_data
 from app.models import Message
@@ -30,7 +31,7 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
             res = json.loads(redis_previous_device_data.get(uuid))
             for item in res:
                 if obj_dict[item] != res[item]:
-                    print(f"Notify observers for changed value for {item} in {uuid}")
+                    notify_subscribers(uuid=uuid, device_prop=item, new_value=res[item])
         except TypeError:
             print("Data is not found in Redis")
 
