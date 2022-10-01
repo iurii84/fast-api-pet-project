@@ -7,3 +7,4 @@ from .device import Device, DeviceToRegister, RegisterDeviceReturn, RegisterDevi
 from .device_location import DeviceLocationBase
 from .device_type import DeviceTypeBase
 from .device_data_bind import DeviceDataBindBase, RegisterDeviceDataBind, PatchDeviceDataBind
+from .static_display_data import StaticDisplayData

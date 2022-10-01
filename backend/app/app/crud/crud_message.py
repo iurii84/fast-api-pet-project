@@ -8,7 +8,7 @@ import json
 
 from app.core.data_bind_subscribers_nitifier import notify_subscribers
 from app.crud.base import CRUDBase
-from app.db.redis_connection import redis_previous_device_data
+from app.db.redis_connection import redis_connection
 from app.models import Message
 
 
@@ -28,7 +28,7 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
 
         # get value from redis
         try:
-            res = json.loads(redis_previous_device_data.get(uuid))
+            res = json.loads(redis_connection.get(uuid))
             for item in res:
                 if obj_dict[item] != res[item]:
                     notify_subscribers(uuid=uuid, device_prop=item, new_value=res[item])
@@ -37,7 +37,7 @@ class CRUDMessage(CRUDBase[Message, Message, Message]):
 
         # update value in redis
         obj_dict.pop("uuid")
-        redis_previous_device_data.set(uuid, json.dumps(obj_dict))
+        redis_connection.set(uuid, json.dumps(obj_dict))
 
         return db_obj
 

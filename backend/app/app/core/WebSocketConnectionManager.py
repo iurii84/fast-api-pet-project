@@ -1,7 +1,7 @@
 from starlette.websockets import WebSocket
 from typing import List
 
-from app.db.redis_connection import redis_previous_device_data
+from app.db.redis_connection import redis_connection
 
 
 class WebSocketConnectionManager:
@@ -12,7 +12,7 @@ class WebSocketConnectionManager:
         await websocket.accept()
         self.active_connections.append(websocket)
 
-        r = redis_previous_device_data
+        r = redis_connection
         p = r.pubsub()
         p.subscribe(subscribe_id)
         return p

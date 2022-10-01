@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.api_v1.endpoints import \
-    items, login, users, utils, message, device, device_location, device_type, task, device_data_bind
+    items, login, users, utils, message, device, device_location, device_type, task, device_data_bind, static_display_data
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
@@ -14,3 +14,4 @@ api_router.include_router(device_location.router, prefix="/device_location", tag
 api_router.include_router(device_type.router, prefix="/device_type", tags=["device_type"])
 api_router.include_router(task.router, prefix="/task", tags=["task"])
 api_router.include_router(device_data_bind.router, prefix="/device_data_bind", tags=["device_data_bind"])
+api_router.include_router(static_display_data.router, prefix="/static_display_data", tags=["static_display_data"])

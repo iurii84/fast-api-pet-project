@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app import schemas, crud
 from app.api import deps
 from app.core.WebSocketConnectionManager import WebSocketConnectionManager
-from app.db.redis_connection import redis_previous_device_data
+from app.db.redis_connection import redis_connection
 
 from app.worker import compress_db
 
@@ -72,7 +72,7 @@ async def compress_after_date_time(
             # data = await websocket.receive_text()
             message = pubsub.get_message()
             if message:
-                await ws_manager.send_personal_message(f"You wrote: {message}", websocket)
+                await ws_manager.send_personal_message(str(message['data']), websocket)
 
             await asyncio.sleep(0.002)
 
@@ -89,5 +89,5 @@ async def compress_after_date_time(
 async def task_compress_device_messages(
         msg
 ):
-    r = redis_previous_device_data
+    r = redis_connection
     r.publish('a613d4aa-3d03-42ac-955a-cd39ea14b214', msg)
