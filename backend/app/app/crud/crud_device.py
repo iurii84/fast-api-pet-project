@@ -1,6 +1,9 @@
+import json
 from datetime import datetime
 
 from fastapi import HTTPException
+from pydantic import UUID4
+from sqlalchemy.exc import DataError
 from typing import List
 
 from sqlalchemy import func, distinct
@@ -46,6 +49,29 @@ class CRUDDevice(CRUDBase[Device, Device, Device]):
         # where uuid  not in (Select  uuid from public.device)
         # group by uuid, type
         return res
+
+    def get_params_by_uuid(self, db: Session, device_uuid: UUID4):
+        try:
+            res = db.query(Message).where(Message.uuid == device_uuid).first()
+        except DataError:
+            raise HTTPException(status_code=404, detail="device not found")
+
+        fields_dict = vars(res)
+
+        fields_dict.pop("_sa_instance_state")
+        fields_dict.pop("id")
+        fields_dict.pop("compress_ratio")
+        fields_dict.pop("created")
+        fields_dict.pop("uuid")
+        fields_dict.pop("type")
+
+        params = list(fields_dict.keys())
+
+        for p in params:
+            if fields_dict[p] is None:
+                params.pop(params.index(p))
+
+        return {"params": params}
 
     def register_device(self, db: Session, msg: Device) -> Device:
         registered_devices = db.query(Device.uuid).all()

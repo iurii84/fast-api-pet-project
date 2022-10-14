@@ -27,6 +27,13 @@ async def get_unregistered_devices(db: Session = Depends(deps.get_db)) -> Any:
     return devices
 
 
+@router.get("/get_params_by_uuid/{device_uuid}")
+async def get_params_by_uuid(device_uuid: str,
+                             db: Session = Depends(deps.get_db)) -> Any:
+    params = crud.device.get_params_by_uuid(db=db, device_uuid=device_uuid)
+    return params
+
+
 @router.post("/register")
 async def register_device(*, msg: schemas.RegisterDevice, db: Session = Depends(deps.get_db)) -> Any:
     device = crud.device.register_device(db, msg=msg)

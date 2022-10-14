@@ -12,3 +12,10 @@ class StaticDisplayData(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class StaticDisplayDataRegister(BaseModel):
+    frame_name: Union[None, str]
+    device_uuid: UUID4
+    frame_priority: Union[None, int]
+    data_json: dict

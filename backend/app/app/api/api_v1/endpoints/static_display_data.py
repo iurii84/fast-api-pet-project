@@ -17,3 +17,10 @@ async def get_static_display_data(db: Session = Depends(deps.get_db),
                                                                      skip=skip,
                                                                      limit=limit)
     return static_display_data_entries
+
+
+@router.post("")
+async def post_static_display_data(*, msg: schemas.StaticDisplayDataRegister,
+                                   db: Session = Depends(deps.get_db)) -> Any:
+    static_display_data = crud.static_display_data.create(db=db, obj_in=msg)
+    return static_display_data
