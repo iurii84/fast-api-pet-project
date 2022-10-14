@@ -14,6 +14,7 @@
         <v-btn to="/main/profile/charts">View Chart</v-btn>
         <v-btn to="/main/profile/compress_db">Compress DB</v-btn>
         <v-btn to="/main/profile/register_device">Register Device</v-btn>
+        <v-btn to="/main/profile/device_data_bind">Device Data Bind</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>

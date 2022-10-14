@@ -7,7 +7,12 @@ import {
     IDeviceLocationResponse,
     IDeviceTypeResponse, 
     IDeviceDeleteResponse,
-    IDeviceUpdateResponse
+    IDeviceUpdateResponse,
+    IDeviceDataBindList,
+    IDeviceGetParams,
+    IDataBingRegisterResponse,
+    IDatabindDeleteResponse,
+    IDatabindUpdateResponse
 } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -15,6 +20,21 @@ import { State } from '../state';
 
 
 export const mutations = {
+    setUpdateDatabind(state: MainState, payload: IDatabindUpdateResponse) {
+        state.updateDatabind = payload;
+    },
+    setDeleteDatabind(state: MainState, payload: IDatabindDeleteResponse) {
+        state.deleteDevice = payload;
+    },
+    setRegisterDataBind(state: MainState, payload: IDataBingRegisterResponse) {
+        state.registerDataBind = payload;
+    },
+    setDeviceGetParams(state: MainState, payload: IDeviceGetParams) {
+        state.deviceGetParams = payload;
+    },
+    setDeviceDataBindList(state: MainState, payload: IDeviceDataBindList[]) {
+        state.deviceDataBind = payload;
+    },
     setDeviceTypes(state: MainState, payload: IDeviceTypeResponse[]) {
         state.deviceTypes = payload;
     },
@@ -35,6 +55,9 @@ export const mutations = {
     },
     setAvailableDevices(state: MainState, payload: IDeviceAvailableList[]) {
         state.availableDevices = payload;
+    },
+    setAvailableDisplayDevices(state: MainState, payload: IDeviceAvailableList[]) {
+        state.availableDisplayDevices = payload;
     },
     setCompressDb(state: MainState, payload: ICompressResponse) {
         state.compressDbResponse = payload;
@@ -80,7 +103,13 @@ export const commitSetAvailableDevices = commit(mutations.setAvailableDevices);
 export const commitCompressDb = commit(mutations.setCompressDb);
 export const commitSetNotRegisteredDevices = commit(mutations.setNotRegisteredDevices);
 export const commitRegisterDevice = commit(mutations.setRegisterDevice);
+export const commitRegisterDisplayDevice = commit(mutations.setAvailableDisplayDevices);
 export const commitDeleteDevice = commit(mutations.setDeleteDevice);
 export const commitUpdateDevice = commit(mutations.setUpdateDevice);
 export const commitSetDeviceLocations = commit(mutations.setDeviceLocations);
 export const commitSetDeviceTypes = commit(mutations.setDeviceTypes);
+export const commitDeviceDataBindList = commit(mutations.setDeviceDataBindList);
+export const commitDeviceGetParams = commit(mutations.setDeviceGetParams);
+export const commitRegisterDataBind = commit(mutations.setRegisterDataBind);
+export const commitDeleteDatabind = commit(mutations.setDeleteDatabind);
+export const commitUpdateDatabind = commit(mutations.setUpdateDatabind);

@@ -7,7 +7,12 @@ import {
     IDeviceLocationResponse,
     IDeviceTypeResponse,
     IDeviceDeleteResponse,
-    IDeviceUpdateResponse
+    IDeviceUpdateResponse,
+    IDeviceDataBindList,
+    IDeviceGetParams,
+    IDataBingRegisterResponse,
+    IDatabindDeleteResponse,
+    IDatabindUpdateResponse
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -26,6 +31,7 @@ export interface MainState {
     notifications: AppNotification[];
     
     availableDevices: IDeviceAvailableList[];
+    availableDisplayDevices: IDeviceAvailableList[];
     compressDbResponse: ICompressResponse | null;
     notRegisteredDevices: IDeviceNotRegisteredList[];
     registerDevice: IDeviceRegisterResponse | null;
@@ -33,4 +39,9 @@ export interface MainState {
     updateDevice: IDeviceUpdateResponse | null;
     deviceLocations: IDeviceLocationResponse[];
     deviceTypes: IDeviceTypeResponse[];
+    deviceDataBind: IDeviceDataBindList[];
+    deviceGetParams: IDeviceGetParams | null;
+    registerDataBind: IDataBingRegisterResponse | null;
+    deleteDatabind: IDatabindDeleteResponse | null;
+    updateDatabind: IDatabindUpdateResponse | null;
 }

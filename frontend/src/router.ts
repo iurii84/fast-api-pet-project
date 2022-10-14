@@ -71,6 +71,11 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-profile-register_device" */ './views/main/profile/RegisterDevice.vue'),
                 },
+                {
+                  path: 'device_data_bind',
+                  component: () => import(
+                    /* webpackChunkName: "main-profile-device_data_bind" */ './views/main/profile/DeviceDataBind.vue'),
+                },
               ],
             },
             {

@@ -21,6 +21,12 @@ import {
     commitSetDeviceTypes,
     commitDeleteDevice,
     commitUpdateDevice,
+    commitDeviceDataBindList,
+    commitDeviceGetParams,
+    commitRegisterDisplayDevice,
+    commitRegisterDataBind,
+    commitDeleteDatabind,
+    commitUpdateDatabind
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -163,11 +169,23 @@ export const actions = {
             commitAddNotification(context, { color: 'error', content: 'Error resetting password' });
         }
     },
-    async actionGetDevices(context: MainContext) {
+    async actionGetDevices(context: MainContext, is_display: boolean = false) {
         try {
-            const response = await api.getDevices();
+            const response = await api.getDevices(is_display);
             if (response.data) {
                 commitSetAvailableDevices(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
+    async actionGetDisplayDevices(context: MainContext) {
+        try {
+            const response = await api.getDevices(true);
+            if (response.data) {
+                commitRegisterDisplayDevice(context, response.data);
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -298,6 +316,78 @@ export const actions = {
         }
 
     },
+
+    async actionGetDeviceDataBindList(context: MainContext) {
+        try {
+            const response = await api.getDeviceDataBindList();
+            if (response.data) {
+                commitDeviceDataBindList(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
+    async actionGetDeviceParams(context: MainContext, device_uuid: string) {
+        try {
+            const response = await api.getDeviceParams(device_uuid);
+            if (response.data) {
+                commitDeviceGetParams(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
+    async actionRegisterDataBind(context: MainContext, payload) {
+        try {
+            const response = (await Promise.all([
+                api.registerDataBind(context.state.token, payload),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitRegisterDataBind(context, response.data);
+            commitAddNotification(context, { content: 'Databind ' + response.data.id + ' successfully registered!', color: 'success' });
+            // update databind list 
+            dispatchDeviceDataBind(context)
+           
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+
+    async actionDeleteDatabind(context: MainContext, device_id: number) {
+        try {
+            const response = (await Promise.all([
+                api.deleteDatabind(context.state.token, device_id),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitDeleteDatabind(context, response.data);
+            commitAddNotification(context, { content: 'Databind with id ' + response.data.id + ' was successfully removed from DB!', color: 'success' });
+            // update list of databinds
+            dispatchDeviceDataBind(context)
+            
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+
+    async actionUpdateDatabind(context: MainContext, data) {
+        try {
+            const response = (await Promise.all([
+                api.updateDatabind(context.state.token, data, data.id),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitUpdateDatabind(context, response.data);
+            commitAddNotification(context, { content: 'Databind ' + response.data.id + ' was successfully updated!', color: 'success' });
+            
+            /// update list of databinds
+            dispatchDeviceDataBind(context)
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
     
 };
 
@@ -322,6 +412,7 @@ export const dispatchPasswordRecovery = dispatch(actions.passwordRecovery);
 export const dispatchResetPassword = dispatch(actions.resetPassword);
 
 export const dispatchGetAwailableDevices = dispatch(actions.actionGetDevices);
+export const dispatchGetAwailableDisplayDevices = dispatch(actions.actionGetDisplayDevices);
 export const dispatchCompressDb = dispatch(actions.actionCompressDb);
 export const dispatchGetNotRegisteredDevices = dispatch(actions.actionGetNotRegisteredDevices);
 export const dispatchRegisterDevice = dispatch(actions.actionRegisterDevice);
@@ -330,3 +421,8 @@ export const dispatchUpdateDevice = dispatch(actions.actionUpdateDevice);
 export const dispatchDeviceLocations = dispatch(actions.actionGetDeviceLocations);
 export const dispatchDeviceTypes = dispatch(actions.actionGetDeviceTypes);
 export const dispatchGetTask = dispatch(actions.actionGetTask);
+export const dispatchDeviceDataBind = dispatch(actions.actionGetDeviceDataBindList);
+export const dispatchDeviceGetParams = dispatch(actions.actionGetDeviceParams);
+export const dispatchRegisterDataBind = dispatch(actions.actionRegisterDataBind);
+export const dispatchDeleteDatabind = dispatch(actions.actionDeleteDatabind);
+export const dispatchUpdateDatabind = dispatch(actions.actionUpdateDatabind);

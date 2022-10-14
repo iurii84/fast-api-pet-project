@@ -110,3 +110,54 @@ export interface IDeviceUpdate {
     name: string;
     location: number;
 }
+
+export interface IDeviceDataBindList {
+    id: number;
+    binder_name: string;
+    device_uuid: string;
+    device_prop: string;
+    subscriber_uuid: string;
+    char_placeholder: number
+}
+
+export interface IDeviceGetParams {
+    params: [string];
+}
+
+export interface IDataBingRegisterPost {
+    binder_name: string;
+    device_uuid: string;
+    device_prop: string;
+    subscriber_uuid: string;
+    char_placeholder: number;
+}
+
+export interface IDataBingRegisterResponse {
+    id: number;
+    binder_name: string;
+    device_uuid: string;
+    device_prop: string;
+    subscriber_uuid: string;
+    char_placeholder: number;
+}
+
+export interface IDatabindDeleteResponse {
+    id: number;
+}
+
+export interface IDatabindUpdatePatch {
+    binder_name: string;
+    device_uuid: string;
+    device_prop: string;
+    subscriber_uuid: string;
+    char_placeholder: number;
+}
+
+export interface IDatabindUpdateResponse {
+    id: number;
+    binder_name: string;
+    device_uuid: string;
+    device_prop: string;
+    subscriber_uuid: string;
+    char_placeholder: number;
+}

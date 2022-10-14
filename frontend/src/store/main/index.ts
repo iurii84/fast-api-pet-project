@@ -13,13 +13,19 @@ const defaultState: MainState = {
   notifications: [],
   
   availableDevices: [],
+  availableDisplayDevices: [],
   compressDbResponse: null,
   notRegisteredDevices: [],
   registerDevice: null,
   deleteDevice: null,
   updateDevice: null,
   deviceLocations: [],
-  deviceTypes: []
+  deviceTypes: [],
+  deviceDataBind: [],
+  deviceGetParams: null,
+  registerDataBind: null,
+  deleteDatabind: null,
+  updateDatabind: null
 };
 
 export const mainModule = {

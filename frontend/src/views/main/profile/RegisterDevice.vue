@@ -313,7 +313,7 @@
         locationUpdate() {
             try { 
                 if (this.device_locations_api[0].location_id != null && this.table_items_registered[0].location) {
-                     let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
+                    let registered_devices_arr = JSON.parse(JSON.stringify(this.table_items_registered));
                     for (let [index, val] of this.table_items_registered.entries()) {
                         registered_devices_arr[index].location = this.getLocationAttrById(val.location)  
                     }
@@ -366,23 +366,7 @@
             }
             return loc_by_name;
         },
-        // setLocationObjByName(location_name) { 
-        //     let obj_by_name;
-        //     if (!this.location_pushed) {
-        //         console.log(location_name)
-        //         for (let item of this.device_locations) {
-        //             console.log(item.label)
-        //             if (item.label === location_name) {
-        //                 obj_by_name = item
-        //                 break
-        //             } 
-        //         }
-        //     }
-            
-            
-        //     this.device_update_location_input =  obj_by_name;
-        //     this.location_pushed = true
-        // },
+        
         deleteDevice(item) {
             this.device_selected_to_delete = item
             console.log("DEVICE SELECTED TO DELETE: " + JSON.stringify(item.id))

@@ -12,9 +12,13 @@ import {
   IDeviceRegisterPost,
   IDeviceLocationResponse,
   IDeviceTypeResponse,
-  IDeviceDeleteResponse,
   IDeviceUpdate,
-  ITaskGetResponse
+  ITaskGetResponse,
+  IDeviceDataBindList,
+  IDeviceGetParams,
+  IDataBingRegisterPost,
+  IDataBingRegisterResponse,
+  IDatabindUpdatePatch
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -26,6 +30,21 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async updateDatabind(token: string, data: IDatabindUpdatePatch, deviceId: number) { 
+    return axios.patch(`${apiUrl}/api/v1/device_data_bind/${deviceId}`, data);
+  },
+  async deleteDatabind(token: string, deviceId: number) { 
+    return axios.delete(`${apiUrl}/api/v1/device_data_bind/${deviceId}`);
+  },
+  async registerDataBind(token: string, data: IDataBingRegisterPost) { 
+    return axios.post<IDataBingRegisterResponse>(`${apiUrl}/api/v1/device_data_bind`, data);
+  },
+  async getDeviceParams(device_uuid: string) { 
+    return axios.get<IDeviceGetParams>(`${apiUrl}/api/v1/device/get_params_by_uuid/${device_uuid}`);
+  },
+  async getDeviceDataBindList() { 
+    return axios.get<IDeviceDataBindList[]>(`${apiUrl}/api/v1/device_data_bind`);
+  },
   async updateDevice(token: string, data: IDeviceUpdate, deviceId: number) { 
     return axios.patch(`${apiUrl}/api/v1/device/${deviceId}`, data);
   },
@@ -41,8 +60,8 @@ export const api = {
   async registerDevice(token: string, data: IDeviceRegisterPost) { 
     return axios.post<IDeviceRegisterResponse>(`${apiUrl}/api/v1/device/register`, data);
   },
-  async getDevices() { 
-    return axios.get<IDeviceAvailableList[]>(`${apiUrl}/api/v1/device`);
+  async getDevices(is_display: boolean = false) { 
+    return axios.get<IDeviceAvailableList[]>(`${apiUrl}/api/v1/device`, { params: { is_display: is_display } });
   },
   async getNotRegisteredDevices() { 
     return axios.get<IDeviceNotRegisteredList[]>(`${apiUrl}/api/v1/device/get_unregistered`);
