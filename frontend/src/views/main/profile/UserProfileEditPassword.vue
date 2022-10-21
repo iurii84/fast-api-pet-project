@@ -21,7 +21,7 @@
               data-vv-rules="required"
               v-validate="'required'"
               v-model="password1"
-              :error-messages="errors.first('password')">
+              :error-messages="veeErrors.first('password')">
             </v-text-field>
             <v-text-field
               type="password"
@@ -32,7 +32,7 @@
               data-vv-as="password"
               v-validate="'required|confirmed:password'"
               v-model="password2"
-              :error-messages="errors.first('password_confirmation')">
+              :error-messages="veeErrors.first('password_confirmation')">
             </v-text-field>
           </v-form>
         </template>

@@ -3,7 +3,7 @@ import VeeValidate from 'vee-validate';
 
 // name conflict resolution
 const config = {
-    errorBagName:'errorBags',//change if property conflicts.
-    fieldsBagName:'fieldBags',
+    errorBagName:'veeErrors',//change if property conflicts.
+    fieldsBagName:'veeFields',
 };
 Vue.use(VeeValidate, config);

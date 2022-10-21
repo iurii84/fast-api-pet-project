@@ -22,7 +22,7 @@
               v-model="email"
               v-validate="'required|email'"
               data-vv-name="email"
-              :error-messages="errors.collect('email')"
+              :error-messages="veeErrors.collect('email')" 
               required
             ></v-text-field>
           </v-form>
