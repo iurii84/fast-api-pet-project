@@ -1,7 +1,8 @@
 <template>
-  <div id="app">
-    <v-app>
-      <v-content v-if="loggedIn===null">
+  <v-app>
+    
+      <v-main v-if="loggedIn===null">
+        
         <v-container fill-height>
           <v-layout align-center justify-center>
             <v-flex>
@@ -12,11 +13,12 @@
             </v-flex>
           </v-layout>
         </v-container>
-      </v-content>
+      </v-main>
       <router-view v-else />
+      <v-app-bar> </v-app-bar>
       <NotificationsManager></NotificationsManager>
-    </v-app>
-  </div>
+    
+  </v-app>
 </template>
 
 <script lang="ts">
