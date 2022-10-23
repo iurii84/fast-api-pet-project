@@ -1,266 +1,262 @@
 <template>
-    <v-container fluid>
-        <v-card class="ma-3 pa-3">
-            <v-card-title primary-title>
-                <div class="headline primary--text">Device Data Bind</div>
-            </v-card-title>
+    <v-card class="ma-5 pa-5">
+        <v-card-title primary-title>
+            <div class="headline primary--text">Device Data Bind</div>
+        </v-card-title>
 
-            <!-- Delete detabind modal -->
-            <b-modal size="lg" title-tag="h4" ref="delete-databind-confirm" hide-footer title="You are about to delete following databind from the database:">
-                <div v-if="databind_selected_to_delete != null" class="d-block text-center">
-                    <div  class="databind_to_delete_fields">
-                        <b>
-                            <label for="databind_id_to_delete">ID: </label>
-                        </b>
-                        <span id="databind_id_to_delete">
-                            {{databind_selected_to_delete.id}}
-                        </span>
-                    </div>
-
-                    <div  class="databind_to_delete_fields">
-                        <b>
-                            <label for="databind_name_to_delete">NAME: </label>
-                        </b>
-                        <span id="databind_name_to_delete">
-                            {{databind_selected_to_delete.binder_name}}
-                        </span>
-                    </div>
-                     
+        <!-- Delete detabind modal -->
+        <b-modal size="lg" title-tag="h4" ref="delete-databind-confirm" hide-footer title="You are about to delete following databind from the database:">
+            <div v-if="databind_selected_to_delete != null" class="d-block text-center">
+                <div  class="databind_to_delete_fields">
+                    <b>
+                        <label for="databind_id_to_delete">ID: </label>
+                    </b>
+                    <span id="databind_id_to_delete">
+                        {{databind_selected_to_delete.id}}
+                    </span>
                 </div>
-                <hr>
-                <div id="delete-decision-buttons-group">
-                    <b-button class="mt-3 databind_btn" variant="primary" @click="abortDeletingDatabind">Cancel</b-button>
-                    <b-button class="mt-3 databind_btn" variant="danger"  @click="deleteDatabindAfterConfirm">Delete databind</b-button>
+
+                <div  class="databind_to_delete_fields">
+                    <b>
+                        <label for="databind_name_to_delete">NAME: </label>
+                    </b>
+                    <span id="databind_name_to_delete">
+                        {{databind_selected_to_delete.binder_name}}
+                    </span>
                 </div>
-                
-            </b-modal>
-
-            <!-- Create databind modal -->
-            <b-button v-b-modal.modal_create_data_bind id="create_data_bind_btn">Create data bind</b-button>
-
-            <div>
-                <b-modal 
-                    id="modal_create_data_bind" 
-                    title="Create data bind:" 
-                    size="lg"
-                    hide-footer
-                    ref="create_databind_modal">
                     
+            </div>
+            <hr>
+            <div id="delete-decision-buttons-group">
+                <b-button class="mt-3 databind_btn" variant="primary" @click="abortDeletingDatabind">Cancel</b-button>
+                <b-button class="mt-3 databind_btn" variant="danger"  @click="deleteDatabindAfterConfirm">Delete databind</b-button>
+            </div>
+            
+        </b-modal>
 
-                    <b-form @submit.stop.prevent="registerDataBind" @reset="registerDataBindReset">
-                        <b-form-group id="databind_name_group" label="Databind name:" label-for="databind_name_input" class="field_input" >
-                            <b-form-input
-                                id="databind_name_input"
-                                v-model="databind_name_input"
-                                type="text"
+        <!-- Create databind modal -->
+        <b-button v-b-modal.modal_create_data_bind id="create_data_bind_btn">Create data bind</b-button>
 
-                                v-validate="{ required: true, min: 5, max: 30 }"
-                                name="databind_name_input"
-                                :state="validateState('databind_name_input')"
-                                aria-describedby="databind_name-feedback"
-                                data-vv-as="Databind name"
-                                > 
-                            </b-form-input>
-                            <b-form-invalid-feedback id="databind_name-feedback">
-                                {{veeErrors.first("databind_name_input")}}
-                            </b-form-invalid-feedback>
-                        </b-form-group>
+        <div>
+            <b-modal 
+                id="modal_create_data_bind" 
+                title="Create data bind:" 
+                size="lg"
+                hide-footer
+                ref="create_databind_modal">
+            
+                <b-form @submit.stop.prevent="registerDataBind" @reset="registerDataBindReset">
+                    <b-form-group id="databind_name_group" label="Databind name:" label-for="databind_name_input" class="field_input" >
+                        <b-form-input
+                            id="databind_name_input"
+                            v-model="databind_name_input"
+                            type="text"
 
-                        <b-form-group id="device_selector_group" label="Select device:" label-for="device_selector" class="field_input" >
-                            <b-form-select 
-                                class="no_blink"       
-                                id="device_selector"  
-                                v-model="selected_device" 
-                                text-field="name"
-                                @change="onDeviceSelected"
-                                
-                                v-validate="{ required: true }"
-                                name="databind_device_input"
-                                :state="validateState('databind_device_input')"
-                                aria-describedby="databind_device-feedback"
-                                data-vv-as="Databind device">
+                            v-validate="{ required: true, min: 5, max: 30 }"
+                            name="databind_name_input"
+                            :state="validateState('databind_name_input')"
+                            aria-describedby="databind_name-feedback"
+                            data-vv-as="Databind name"
+                            > 
+                        </b-form-input>
+                        <b-form-invalid-feedback id="databind_name-feedback">
+                            {{veeErrors.first("databind_name_input")}}
+                        </b-form-invalid-feedback>
+                    </b-form-group>
 
-                                <option :value="null" disabled>-- Select device --</option>
-                                <option v-for="option in registered_devices" :value="option">
-                                    {{ option.name }}
-                                </option>
-                            </b-form-select> 
-                            <b-form-invalid-feedback id="databind_device-feedback">
-                                {{veeErrors.first("databind_device_input")}}
-                            </b-form-invalid-feedback>
-
+                    <b-form-group id="device_selector_group" label="Select device:" label-for="device_selector" class="field_input" >
+                        <b-form-select 
+                            class="no_blink"       
+                            id="device_selector"  
+                            v-model="selected_device" 
+                            text-field="name"
+                            @change="onDeviceSelected"
                             
-                        </b-form-group>
+                            v-validate="{ required: true }"
+                            name="databind_device_input"
+                            :state="validateState('databind_device_input')"
+                            aria-describedby="databind_device-feedback"
+                            data-vv-as="Databind device">
 
-                        <b-form-group id="device_param_selector_group" label="Select device parameter:" label-for="device_parameter_selector" class="field_input" >
-                            <b-form-select 
-                                class="no_blink"       
-                                id="device_parameter_selector"  
-                                v-model="selected_param"
-                                :options="device_params" 
-                                
-                                v-validate="{ required: true }"
-                                name="databind_param_input"
-                                :state="validateState('databind_param_input')"
-                                aria-describedby="databind_param-feedback"
-                                data-vv-as="Databind parameter"
-                            >
-                            <option :value="null" disabled>-- Select device parameter --</option>
-                            </b-form-select>
-                            <b-form-invalid-feedback id="databind_param-feedback">
-                                {{veeErrors.first("databind_param_input")}}
-                            </b-form-invalid-feedback>
-                        </b-form-group>
-
-                        <b-form-group id="subscriber_device_selector_group" label="Select subscriber device:" label-for="subscriber_device_selector" class="field_input" >
-                            <b-form-select 
-                                class="no_blink"       
-                                id="subscriber_device_selector"  
-                                v-model="selected_subscriber"
-
-                                v-validate="{ required: true }"
-                                name="databind_subscriber_input"
-                                :state="validateState('databind_subscriber_input')"
-                                aria-describedby="databind_subscriber-feedback"
-                                data-vv-as="Databind subscriber"
-                            >
-                            <option :value="null" disabled>-- Select subscriber --</option>
-                            <option v-for="option in display_devices_list" :value="option">
+                            <option :value="null" disabled>-- Select device --</option>
+                            <option v-for="option in registered_devices" :value="option">
                                 {{ option.name }}
                             </option>
-                            </b-form-select>
-                            <b-form-invalid-feedback id="databind_subscriber-feedback">
-                                {{veeErrors.first("databind_subscriber_input")}}
-                            </b-form-invalid-feedback>
-                        </b-form-group>
+                        </b-form-select> 
+                        <b-form-invalid-feedback id="databind_device-feedback">
+                            {{veeErrors.first("databind_device_input")}}
+                        </b-form-invalid-feedback>
 
-                        <b-form-group id="databind_placeholder_data_group" label="Databind placeholder size:" label-for="databind_placeholder_data_selector" class="field_input" >
-                            <b-form-input
-                                id="databind_placeholder_data_selector"
-                                v-model="placeholder_lenght"
-                                min=1
-                                type="number"> 
-                            </b-form-input>
-                        </b-form-group>
-
-                        <hr>
-
-                        <div>
-                            <b-button class="databind_btn" type="submit" variant="primary">Create databind</b-button>
-                            <b-button class="databind_btn"  type="reset">Reset</b-button>
-                        </div>
                         
-                    </b-form>
-                </b-modal>
-            </div>
+                    </b-form-group>
 
-            <!-- Databind table -->
-            <div class="no_blink">
-                <b-table striped hover sort-icon-left
-                    id="databind_table"
-                    :items="table_items" 
-                    :fields="table_fields" 
-                    :sort-by.sync="nonRegSortBy"
-                    :sort-desc.sync="nonRegSortDesc"
-                    label-sort-asc=""
-                    label-sort-desc=""
-                    label-sort-clear=""
-                    v-model="currentItem"> 
-                
-                
-                    <template v-slot:cell(actions)="{ detailsShowing, item }">                        
-                        <v-icon class="registered_icons" @click="toggleDetailsRegistered(item)">{{ detailsShowing ? 'close' : 'edit'}}</v-icon>
-                        <v-icon class="registered_icons" @click="deleteDatabind(item)">delete</v-icon>
-                    </template>
+                    <b-form-group id="device_param_selector_group" label="Select device parameter:" label-for="device_parameter_selector" class="field_input" >
+                        <b-form-select 
+                            class="no_blink"       
+                            id="device_parameter_selector"  
+                            v-model="selected_param"
+                            :options="device_params" 
+                            
+                            v-validate="{ required: true }"
+                            name="databind_param_input"
+                            :state="validateState('databind_param_input')"
+                            aria-describedby="databind_param-feedback"
+                            data-vv-as="Databind parameter"
+                        >
+                        <option :value="null" disabled>-- Select device parameter --</option>
+                        </b-form-select>
+                        <b-form-invalid-feedback id="databind_param-feedback">
+                            {{veeErrors.first("databind_param_input")}}
+                        </b-form-invalid-feedback>
+                    </b-form-group>
 
-                    <template v-slot:row-details="{ item }">
-                     
-                        <b-card>
-                            <b-form @submit.stop.prevent="updateDatabind(item)">
+                    <b-form-group id="subscriber_device_selector_group" label="Select subscriber device:" label-for="subscriber_device_selector" class="field_input" >
+                        <b-form-select 
+                            class="no_blink"       
+                            id="subscriber_device_selector"  
+                            v-model="selected_subscriber"
 
-                                <b-form-group id="databind_name_group" label="Databind name:" label-for="databind_name_input" class="field_input" >
-                                    <b-form-input
-                                        id="databind_name_input"
-                                        v-model="databind_name_input"
-                                        type="text"
-                                        v-validate="{ required: true, min: 5, max: 30}"
-                                        name="databind_name_input"
-                                        :state="validateState('databind_name_input')"
-                                        aria-describedby="databind_name-feedback"
-                                        data-vv-as="Databind name"
-                                        > 
-                                    </b-form-input>
-                                    <b-form-invalid-feedback id="databind_name-feedback">
-                                        {{veeErrors.first("databind_name_input")}}
-                                    </b-form-invalid-feedback>
-                                </b-form-group>
+                            v-validate="{ required: true }"
+                            name="databind_subscriber_input"
+                            :state="validateState('databind_subscriber_input')"
+                            aria-describedby="databind_subscriber-feedback"
+                            data-vv-as="Databind subscriber"
+                        >
+                        <option :value="null" disabled>-- Select subscriber --</option>
+                        <option v-for="option in display_devices_list" :value="option">
+                            {{ option.name }}
+                        </option>
+                        </b-form-select>
+                        <b-form-invalid-feedback id="databind_subscriber-feedback">
+                            {{veeErrors.first("databind_subscriber_input")}}
+                        </b-form-invalid-feedback>
+                    </b-form-group>
 
-                                <b-form-group id="device_selector_group" label="Select device:" label-for="device_selector" class="field_input" >
-                                    <b-form-select 
-                                        class="no_blink"       
-                                        id="device_selector"  
-                                        v-model="selected_device" 
-                                        text-field="name"
-                                        @change="onDeviceSelected"
-                                        
-                                        v-validate="{ required: true }"
-                                        name="databind_device_input"
-                                        :state="validateState('databind_device_input')"
-                                        aria-describedby="databind_device-feedback"
-                                        data-vv-as="Databind device">
+                    <b-form-group id="databind_placeholder_data_group" label="Databind placeholder size:" label-for="databind_placeholder_data_selector" class="field_input" >
+                        <b-form-input
+                            id="databind_placeholder_data_selector"
+                            v-model="placeholder_lenght"
+                            min=1
+                            type="number"> 
+                        </b-form-input>
+                    </b-form-group>
 
-                                        <option :value="null" disabled>-- Select device --</option>
-                                        <option v-for="option in registered_devices" :value="option">
-                                            {{ option.name }}
-                                        </option>
-                                    </b-form-select> 
-                                    <b-form-invalid-feedback id="databind_device-feedback">
-                                        {{veeErrors.first("databind_device_input")}}
-                                    </b-form-invalid-feedback>
-                                </b-form-group>
+                    <hr>
 
-                                <b-form-group id="device_param_selector_group" label="Select device parameter:" label-for="device_parameter_selector" class="field_input" >
-                                    <b-form-select 
-                                        class="no_blink"       
-                                        id="device_parameter_selector"  
-                                        v-model="selected_param"
-                                        :options="device_params"  
-                                    >
-                                    </b-form-select>
-                                </b-form-group>
+                    <div>
+                        <b-button class="databind_btn" type="submit" variant="primary">Create databind</b-button>
+                        <b-button class="databind_btn"  type="reset">Reset</b-button>
+                    </div>
+                    
+                </b-form>
+            </b-modal>
+        </div>
 
-                                <b-form-group id="subscriber_device_selector_group" label="Select subscriber device:" label-for="subscriber_device_selector" class="field_input" >
-                                    <b-form-select 
-                                        class="no_blink"       
-                                        id="subscriber_device_selector"  
-                                        v-model="selected_subscriber"
-                                    >
-                                    <option v-for="option in display_devices_list" :value="option">
+        <!-- Databind table -->
+        <div class="no_blink">
+            <b-table striped hover sort-icon-left
+                id="databind_table"
+                :items="table_items" 
+                :fields="table_fields" 
+                :sort-by.sync="nonRegSortBy"
+                :sort-desc.sync="nonRegSortDesc"
+                label-sort-asc=""
+                label-sort-desc=""
+                label-sort-clear=""
+                v-model="currentItem"> 
+            
+                <template v-slot:cell(actions)="{ detailsShowing, item }">                        
+                    <v-icon class="registered_icons" @click="toggleDetailsRegistered(item)">{{ detailsShowing ? 'close' : 'edit'}}</v-icon>
+                    <v-icon class="registered_icons" @click="deleteDatabind(item)">delete</v-icon>
+                </template>
+
+                <template v-slot:row-details="{ item }">
+                    
+                    <b-card>
+                        <b-form @submit.stop.prevent="updateDatabind(item)">
+
+                            <b-form-group id="databind_name_group" label="Databind name:" label-for="databind_name_input" class="field_input" >
+                                <b-form-input
+                                    id="databind_name_input"
+                                    v-model="databind_name_input"
+                                    type="text"
+                                    v-validate="{ required: true, min: 5, max: 30}"
+                                    name="databind_name_input"
+                                    :state="validateState('databind_name_input')"
+                                    aria-describedby="databind_name-feedback"
+                                    data-vv-as="Databind name"
+                                    > 
+                                </b-form-input>
+                                <b-form-invalid-feedback id="databind_name-feedback">
+                                    {{veeErrors.first("databind_name_input")}}
+                                </b-form-invalid-feedback>
+                            </b-form-group>
+
+                            <b-form-group id="device_selector_group" label="Select device:" label-for="device_selector" class="field_input" >
+                                <b-form-select 
+                                    class="no_blink"       
+                                    id="device_selector"  
+                                    v-model="selected_device" 
+                                    text-field="name"
+                                    @change="onDeviceSelected"
+                                    
+                                    v-validate="{ required: true }"
+                                    name="databind_device_input"
+                                    :state="validateState('databind_device_input')"
+                                    aria-describedby="databind_device-feedback"
+                                    data-vv-as="Databind device">
+
+                                    <option :value="null" disabled>-- Select device --</option>
+                                    <option v-for="option in registered_devices" :value="option">
                                         {{ option.name }}
                                     </option>
+                                </b-form-select> 
+                                <b-form-invalid-feedback id="databind_device-feedback">
+                                    {{veeErrors.first("databind_device_input")}}
+                                </b-form-invalid-feedback>
+                            </b-form-group>
 
-                                    </b-form-select>
-                                </b-form-group>
-                               
-                                <b-form-group id="databind_placeholder_data_group" label="Databind placeholder size:" label-for="databind_placeholder_data_selector" class="field_input" >
-                                    <b-form-input
-                                        id="databind_placeholder_data_selector"
-                                        v-model="placeholder_lenght"
-                                        min=1
-                                        type="number"> 
-                                    </b-form-input>
-                                </b-form-group>
+                            <b-form-group id="device_param_selector_group" label="Select device parameter:" label-for="device_parameter_selector" class="field_input" >
+                                <b-form-select 
+                                    class="no_blink"       
+                                    id="device_parameter_selector"  
+                                    v-model="selected_param"
+                                    :options="device_params"  
+                                >
+                                </b-form-select>
+                            </b-form-group>
 
-                                <b-button type="submit" v-bind:disabled="update_button_inactive" variant="primary">Submit</b-button>
+                            <b-form-group id="subscriber_device_selector_group" label="Select subscriber device:" label-for="subscriber_device_selector" class="field_input" >
+                                <b-form-select 
+                                    class="no_blink"       
+                                    id="subscriber_device_selector"  
+                                    v-model="selected_subscriber"
+                                >
+                                <option v-for="option in display_devices_list" :value="option">
+                                    {{ option.name }}
+                                </option>
+
+                                </b-form-select>
+                            </b-form-group>
                             
-                            </b-form>
-                        </b-card>
-                    </template> 
+                            <b-form-group id="databind_placeholder_data_group" label="Databind placeholder size:" label-for="databind_placeholder_data_selector" class="field_input" >
+                                <b-form-input
+                                    id="databind_placeholder_data_selector"
+                                    v-model="placeholder_lenght"
+                                    min=1
+                                    type="number"> 
+                                </b-form-input>
+                            </b-form-group>
 
-                </b-table>
-            </div>
-        </v-card>
-    </v-container>
+                            <b-button type="submit" v-bind:disabled="update_button_inactive" variant="primary">Submit</b-button>
+                        
+                        </b-form>
+                    </b-card>
+                </template> 
+
+            </b-table>
+        </div>
+    </v-card>
 </template>
 
 <script>

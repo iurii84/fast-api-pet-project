@@ -2,7 +2,6 @@
   <v-app>
     
       <v-main v-if="loggedIn===null">
-        
         <v-container fill-height>
           <v-layout align-center justify-center>
             <v-flex>
@@ -14,8 +13,9 @@
           </v-layout>
         </v-container>
       </v-main>
+      
       <router-view v-else />
-      <v-app-bar> </v-app-bar>
+       
       <NotificationsManager></NotificationsManager>
     
   </v-app>
