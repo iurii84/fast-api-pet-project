@@ -1,126 +1,121 @@
 <template>
-    <v-container fluid>
-        <v-card class="ma-3 pa-3">
-        <v-card-title primary-title>
-            <div class="headline primary--text">Compress DB</div>
-        </v-card-title>
+    <v-card class="ma-5 pa-5">
+    <v-card-title primary-title>
+        <div class="headline primary--text">Compress DB</div>
+    </v-card-title>
 
-        <div>
-            <b-alert v-model="showDismissibleAlert" variant="success" dismissible>
-                <h4 class="alert-heading">Database was successfully compressed! </h4>
-                <hr>
-                <p class="mb-0">
-                    {{ response_compress_db }} records were deleted!
-                    <br>
-                    Timeline coverage  
-                    <br>
-                    <b>from: </b>  {{value_date_from}}  {{time_value_from}}   
-                    <br>
-                    <b>to:</b> &nbsp; &nbsp; &nbsp;{{value_date_to}}  {{time_value_to}}
-                </p> 
-            </b-alert>
-        </div>
-        
-        <div>
-            <b-form id='compress_db_form' @submit.stop.prevent="compress_db"  >
-                <b-form-group id="device_select" label="Select device:" label-for="device_select_form" >
-                    <v-select 
-                        
-                        id="device_select_form"  
-                        v-model="selected_device" 
-                        :options="device_select" 
-                        required 
-                        placeholder="Select device"  
-                        @open="on_open_device_selector"
-                    >
+    <div>
+        <b-alert v-model="showDismissibleAlert" variant="success" dismissible>
+            <h4 class="alert-heading">Database was successfully compressed! </h4>
+            <hr>
+            <p class="mb-0">
+                {{ response_compress_db }} records were deleted!
+                <br>
+                Timeline coverage  
+                <br>
+                <b>from: </b>  {{value_date_from}}  {{time_value_from}}   
+                <br>
+                <b>to:</b> &nbsp; &nbsp; &nbsp;{{value_date_to}}  {{time_value_to}}
+            </p> 
+        </b-alert>
+    </div>
 
-                    </v-select>
-
-                </b-form-group>
-
-                <v-select
-                    v-model="compress_ratio"
-                    :reduce="(option) => option.id"
-                    :options="[
-                    { label: '0', id: 0 },
-                    { label: '1', id: 1 },
-                    { label: '2', id: 2 },
+    <div>
+        <b-form id='compress_db_form' @submit.stop.prevent="compress_db"  >
+            <b-form-group id="device_select" label="Select device:" label-for="device_select_form" >
+                <v-select 
                     
-                    ]"
-                    :clearable=false
-                />
- 
+                    id="device_select_form"  
+                    v-model="selected_device" 
+                    :options="device_select" 
+                    required 
+                    placeholder="Select device"  
+                    @open="on_open_device_selector"
+                >
 
-                <div class="date_time_container">
-                <span class="date_time">
-                    <div>
-                        <label for="datepicker_from">Date from:</label>
-                        <b-form-datepicker 
-                            id="datepicker_from" 
-                            form="compress_db_form"
-                            v-model="value_date_from" 
-                            required
-                            >
-                        </b-form-datepicker>
+                </v-select>
 
-                        <br>
-                        
-                        <label for="timepicker_from">Time from:</label>
-                        <b-col md="auto">
-                            <b-form-timepicker 
-                                id="timepicker_from" 
-                                v-model="time_value_from"  
-                                :hour12=false 
-                                :no-close-button=true
-                                :hide-header=true
-                                required
-                                >
-                            </b-form-timepicker>
-                        </b-col>
-                    </div>
-                </span>
+            </b-form-group>
 
-                <span class="date_time">
-                    <div>
-                        <label for="datepicker_to">Date to:</label>
-                        <b-form-datepicker 
-                            id="datepicker_to" 
-                            v-model="value_date_to" 
-                            required
-                            >
-                        </b-form-datepicker>
-                        
-                        <br>
-
-                        <label for="timepicker_to">Time to:</label>
-                        <b-col md="auto">
-                            <b-form-timepicker 
-                                id="timepicker_to" 
-                                v-model="time_value_to"  
-                                :hour12=false
-                                :no-close-button=true
-                                :hide-header=true
-                                required
-                            >
-                            </b-form-timepicker>
-                        </b-col>
-                    </div>
-                </span>
-            </div>
-            
-            <b-button type="submit" variant="primary" v-bind:disabled="button_inactive">
-                <b-spinner small v-if="spinner_visible"></b-spinner>
-                Compress DB
+            <v-select
+                v-model="compress_ratio"
+                :reduce="(option) => option.id"
+                :options="[
+                { label: '0', id: 0 },
+                { label: '1', id: 1 },
+                { label: '2', id: 2 },
                 
-            </b-button>
-            
-            </b-form>
+                ]"
+                :clearable=false
+            />
+
+
+            <div class="date_time_container">
+            <span class="date_time">
+                <div>
+                    <label for="datepicker_from">Date from:</label>
+                    <b-form-datepicker 
+                        id="datepicker_from" 
+                        form="compress_db_form"
+                        v-model="value_date_from" 
+                        required
+                        >
+                    </b-form-datepicker>
+
+                    <br>
+                    
+                    <label for="timepicker_from">Time from:</label>
+                    <b-col md="auto">
+                        <b-form-timepicker 
+                            id="timepicker_from" 
+                            v-model="time_value_from"  
+                            :hour12=false 
+                            :no-close-button=true
+                            :hide-header=true
+                            required
+                            >
+                        </b-form-timepicker>
+                    </b-col>
+                </div>
+            </span>
+
+            <span class="date_time">
+                <div>
+                    <label for="datepicker_to">Date to:</label>
+                    <b-form-datepicker 
+                        id="datepicker_to" 
+                        v-model="value_date_to" 
+                        required
+                        >
+                    </b-form-datepicker>
+                    
+                    <br>
+
+                    <label for="timepicker_to">Time to:</label>
+                    <b-col md="auto">
+                        <b-form-timepicker 
+                            id="timepicker_to" 
+                            v-model="time_value_to"  
+                            :hour12=false
+                            :no-close-button=true
+                            :hide-header=true
+                            required
+                        >
+                        </b-form-timepicker>
+                    </b-col>
+                </div>
+            </span>
         </div>
         
-        </v-card>
-
+        <b-button type="submit" variant="primary" v-bind:disabled="button_inactive">
+            <b-spinner small v-if="spinner_visible"></b-spinner>
+            Compress DB
+            
+        </b-button>
         
-    </v-container>
+        </b-form>
+    </div>
+    </v-card>
 </template>
 
 

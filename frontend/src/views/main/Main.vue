@@ -1,16 +1,63 @@
 <template>
   <div>
-    <v-navigation-drawer  :mini-variant="miniDrawer" v-model="showDrawer" fixed app>
+    <v-navigation-drawer  
+      :mini-variant="miniDrawer"
+      width="280"
+      v-model="showDrawer" 
+      fixed 
+      app
+      >
       <v-layout column fill-height>
-        <v-list>
+        <v-list dense>
           <v-subheader v-if="miniDrawer===false">Main menu</v-subheader>
 
-          <v-list-item to="/main/dashboard">
-            <v-list-item-icon>
-              <v-icon>home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>My home</v-list-item-title>
-          </v-list-item>
+            <v-list-group
+              no-action
+              :value="false"
+              prepend-icon="home"
+            >
+              <template v-slot:activator>
+                <v-list-item-title>My home</v-list-item-title>
+              </template>
+
+              <v-list-item to="/main/dashboard">
+                <v-list-item-icon>
+                  <v-icon>dashboard</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Dashboard</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/main/profile/charts">
+                <v-list-item-icon>
+                  <v-icon>mdi-chart-line</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Charts</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/main/profile/register_device">
+                <v-list-item-icon>
+                  <v-icon>mdi-devices</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Register device</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/main/profile/device_data_bind">
+                <v-list-item-icon>
+                  <v-icon>mdi-link-variant</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Register databind</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/main/profile/compress_db">
+                <v-list-item-icon>
+                  <v-icon>mdi-arrow-collapse-vertical</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Compress DB</v-list-item-title>
+              </v-list-item>
+
+            </v-list-group>
+
+          
 
           <v-list-item to="/main/profile/view">
             <v-list-item-icon>
@@ -140,12 +187,6 @@ const routeGuardMain = async (to, from, next) => {
 @Component
 export default class Main extends Vue {
   public appName = appName;
-
-  //use this to inherited menu
-  public settings = [
-      ['Management', 'home'],
-      ['Settings', 'settings'],
-    ];
 
   public beforeRouteEnter(to, from, next) {
     routeGuardMain(to, from, next);

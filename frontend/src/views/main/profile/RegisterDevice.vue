@@ -1,6 +1,6 @@
 <template>
-    <v-container fluid>
-        <v-card class="ma-3 pa-3 no_blink" id="table_unregistered">
+    <div>
+        <v-card class="ma-5 pa-5 no_blink" id="table_unregistered">
             <v-card-title primary-title>
                 <div class="headline primary--text">Unregistered Devices</div>
             </v-card-title>
@@ -64,7 +64,6 @@
                         <b-btn @click="toggleDetails(item)">{{ detailsShowing ? 'Close' : 'Register device'}}</b-btn>
                     </template>
                    
-                    
                     <template v-slot:row-details="{ item }">
                         <b-card>
                         <label for="field_input_uuid" class="field_input">UUID: </label>
@@ -80,13 +79,11 @@
 
                         <b-form-group id="device_select_location" label="Select device location:" label-for="device_location_selector" class="field_input" >
                             <v-select 
-                                
                                 id="device_location_selector"  
                                 v-model="device_location_input" 
                                 :options="device_locations" 
                                 required 
                                 placeholder="Select device location"  
-                                
                             >
 
                             </v-select>
@@ -105,7 +102,7 @@
                 </b-table>    
             </div>
         </v-card>
-        <v-card class="ma-3 pa-3 no_blink" id="table_registered">
+        <v-card class="ma-5 pa-5 no_blink" id="table_registered">
             <v-card-title primary-title>
                 <div class="headline primary--text">Registered Devices</div>
             </v-card-title>
@@ -134,24 +131,18 @@
                     </template>
 
                     <template v-slot:row-details="{ item }">
-                     
                         <b-card>
-
                             <label for="field_input_id" class="field_input">ID: </label>
                             <b-form-input v-model="item.id"  disabled class="field_input" id="field_input_id"> 
                                 {{device_update_id = item.id}}    
                             </b-form-input>
-
 
                             <label for="field_input_uuid" class="field_input">UUID: </label>
                             <b-form-input v-model="item.uuid"  disabled class="field_input" id="field_input_uuid"> 
                             </b-form-input>
 
                             <b-form-group id="device_select_location" label="Select device location:" label-for="device_location_selector" class="field_input" >
-                                
-                               
                                 <v-select 
-                                    
                                     id="device_location_selector"  
                                     v-model="device_update_location_input" 
                                     :options="device_locations" 
@@ -159,8 +150,7 @@
                                     placeholder="Select device location"       
                                 >
                                 </v-select>
-                              
-                                
+                                                             
                                 <div v-if="device_location_input != null">
                                     <br>
                                     description:  {{device_update_location_input.description}}
@@ -175,15 +165,12 @@
                             <br>
 
                             <b-button variant="primary" v-on:click = "update_device" v-bind:disabled="update_button_inactive">Update</b-button>
-                        
                         </b-card>
-                    </template> 
-                
+                    </template>                
                 </b-table>
             </div>
         </v-card>
-    </v-container>
-    
+    </div> 
 </template>
 
 <script>

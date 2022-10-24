@@ -1,52 +1,50 @@
 <template>
-  <v-container fluid>
-    <v-card class="ma-3 pa-3">
-      <v-card-title primary-title>
-        <div class="headline primary--text">Temperature and humidity data</div>
-      </v-card-title>
-      <ChartSettingsModal :load_interval=this.selected 
-                          @on-update-chart-after-value-changed="callback_chart_after_value_changed" />
-      
-      <div></div>
-      <div class="temp-hum-data-avg-now">
-        <span class="temp-data-avg-now">
-          Temperature: {{temp}}
-        </span>
-        <span class="hum-data-avg-now">
-          Humidity: {{hum}}
-        </span>
-        <span id="chart-settings-button">
-          <b-button v-b-modal.temp-hum-settings-modal variant="outline-secondary">Chart settings</b-button>
-        </span>
-      </div>
-      <div class="temp-hum-chart" ref="chartdiv"></div> 
-      <br>
-      <div class="time-interval-selector">   
-        Select time interval: 
-        <v-select
-            @input="when_time_interval_changed" 
-            v-model="selected"
-            :reduce="(option) => option.id"
-            :options="[
-              { label: '15m', id: 15 },
-              { label: '1H', id: 1 * 60 },
-              { label: '4H', id: 4 * 60},
-              { label: '12H', id: 12 * 60},
-              { label: '24H', id: 24 * 60},
-              { label: '3d', id: 24 * 60 * 3},
-              { label: '1w', id: 24 * 60 * 7},
-      
-            ]"
-            :clearable=false
-        />
-      </div>
-      <br>
-      <span> 
-        {{ selected/60 }} hours interval selected
+  <v-card class="ma-5 pa-5">
+    <v-card-title primary-title>
+      <div class="headline primary--text">Temperature and humidity data</div>
+    </v-card-title>
+    <ChartSettingsModal :load_interval=this.selected 
+                        @on-update-chart-after-value-changed="callback_chart_after_value_changed" />
+    
+    <div></div>
+    <div class="temp-hum-data-avg-now">
+      <span class="temp-data-avg-now">
+        Temperature: {{temp}}
       </span>
+      <span class="hum-data-avg-now">
+        Humidity: {{hum}}
+      </span>
+      <span id="chart-settings-button">
+        <b-button v-b-modal.temp-hum-settings-modal variant="outline-secondary">Chart settings</b-button>
+      </span>
+    </div>
+    <div class="temp-hum-chart" ref="chartdiv"></div> 
+    <br>
+    <div class="time-interval-selector">   
+      Select time interval: 
+      <v-select
+          @input="when_time_interval_changed" 
+          v-model="selected"
+          :reduce="(option) => option.id"
+          :options="[
+            { label: '15m', id: 15 },
+            { label: '1H', id: 1 * 60 },
+            { label: '4H', id: 4 * 60},
+            { label: '12H', id: 12 * 60},
+            { label: '24H', id: 24 * 60},
+            { label: '3d', id: 24 * 60 * 3},
+            { label: '1w', id: 24 * 60 * 7},
+    
+          ]"
+          :clearable=false
+      />
+    </div>
+    <br>
+    <span> 
+      {{ selected/60 }} hours interval selected
+    </span>
 
-    </v-card>
-  </v-container>
+  </v-card>
 </template>
 
 <script>
