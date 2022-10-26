@@ -76,6 +76,11 @@ export default new Router({
                   component: () => import(
                     /* webpackChunkName: "main-profile-device_data_bind" */ './views/main/profile/DeviceDataBind.vue'),
                 },
+                {
+                  path: 'static_display_data',
+                  component: () => import(
+                    /* webpackChunkName: "main-profile-static_display_data" */ './views/main/profile/StaticDisplayData.vue'),
+                },
               ],
             },
             {
