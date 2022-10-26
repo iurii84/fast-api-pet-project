@@ -1,18 +1,18 @@
-import {  
-    IDeviceAvailableList, 
-    IDeviceNotRegisteredList, 
-    IUserProfile, 
-    ICompressResponse, 
-    IDeviceRegisterResponse, 
+import {
+    IDeviceAvailableList,
+    IDeviceNotRegisteredList,
+    IUserProfile,
+    ICompressResponse,
+    IDeviceRegisterResponse,
     IDeviceLocationResponse,
-    IDeviceTypeResponse, 
+    IDeviceTypeResponse,
     IDeviceDeleteResponse,
     IDeviceUpdateResponse,
     IDeviceDataBindList,
     IDeviceGetParams,
     IDataBingRegisterResponse,
     IDatabindDeleteResponse,
-    IDatabindUpdateResponse
+    IDatabindUpdateResponse,
 } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';

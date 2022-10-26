@@ -15,7 +15,7 @@ export const getters = {
     token: (state: MainState) => state.token,
     isLoggedIn: (state: MainState) => state.isLoggedIn,
     firstNotification: (state: MainState) => state.notifications.length > 0 && state.notifications[0],
-    
+
     available_devices: (state: MainState) => state.availableDevices,
     available_display_devices: (state: MainState) => state.availableDisplayDevices,
     compress_db: (state: MainState) => state.compressDbResponse,
@@ -26,7 +26,7 @@ export const getters = {
     device_data_bind_list: (state: MainState) => state.deviceDataBind,
     device_params: (state: MainState) => state.deviceGetParams,
     register_databind_response: (state: MainState) => state.registerDataBind,
-    update_databind_response: (state: MainState) => state.updateDatabind
+    update_databind_response: (state: MainState) => state.updateDatabind,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');

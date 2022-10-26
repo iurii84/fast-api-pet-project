@@ -235,6 +235,6 @@ export default class Main extends Vue {
 
   public async logout() {
     await dispatchUserLogOut(this.$store);
-  }  
+  }
 }
 </script>

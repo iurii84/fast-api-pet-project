@@ -23,33 +23,33 @@ import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator';
 
 @Component
 export default class ChartSettingsModal extends Vue {
-    @Prop({default: 0}) load_interval: number
-    
-    data() {
+    @Prop({default: 0}) public load_interval: number;
+
+    public data() {
         return {
-            update_chart_after: "",
+            update_chart_after: '',
             update_chart_interval_options: [
                 { value: 1, text: 'Every second' },
                 { value: 3, text: 'Each 3 seconds' },
                 { value: 5, text: 'Each 5 seconds' },
                 { value: 10, text: 'Each 10 seconds' },
-                { value: 15, text: 'Each 15 seconds'}
-            ]
-        }
+                { value: 15, text: 'Each 15 seconds'},
+            ],
+        };
     }
-    mounted() {
+    public mounted() {
         if (localStorage.update_chart_after) {
                 this.update_chart_after = localStorage.update_chart_after;
             }
     }
 
     @Watch('update_chart_after')
-    onUpdateChartAfterValueChanged(update_chart_after_value) {
+    public onUpdateChartAfterValueChanged(update_chart_after_value) {
         localStorage.update_chart_after = update_chart_after_value;
-        this.$emit('on-update-chart-after-value-changed', update_chart_after_value)
+        this.$emit('on-update-chart-after-value-changed', update_chart_after_value);
     }
 
-    
+
 
 }
 </script>

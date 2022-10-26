@@ -11,7 +11,7 @@ const defaultState: MainState = {
   dashboardMiniDrawer: false,
   dashboardShowDrawer: true,
   notifications: [],
-  
+
   availableDevices: [],
   availableDisplayDevices: [],
   compressDbResponse: null,
@@ -25,7 +25,7 @@ const defaultState: MainState = {
   deviceGetParams: null,
   registerDataBind: null,
   deleteDatabind: null,
-  updateDatabind: null
+  updateDatabind: null,
 };
 
 export const mainModule = {

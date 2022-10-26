@@ -1,9 +1,9 @@
-import { 
-    IDeviceAvailableList, 
-    IUserProfile, 
-    ICompressResponse, 
-    IDeviceNotRegisteredList, 
-    IDeviceRegisterResponse, 
+import {
+    IDeviceAvailableList,
+    IUserProfile,
+    ICompressResponse,
+    IDeviceNotRegisteredList,
+    IDeviceRegisterResponse,
     IDeviceLocationResponse,
     IDeviceTypeResponse,
     IDeviceDeleteResponse,
@@ -12,7 +12,7 @@ import {
     IDeviceGetParams,
     IDataBingRegisterResponse,
     IDatabindDeleteResponse,
-    IDatabindUpdateResponse
+    IDatabindUpdateResponse,
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -29,7 +29,7 @@ export interface MainState {
     dashboardMiniDrawer: boolean;
     dashboardShowDrawer: boolean;
     notifications: AppNotification[];
-    
+
     availableDevices: IDeviceAvailableList[];
     availableDisplayDevices: IDeviceAvailableList[];
     compressDbResponse: ICompressResponse | null;

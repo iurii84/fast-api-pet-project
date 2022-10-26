@@ -43,7 +43,7 @@ export default class AdminUsers extends Vue {
       value: 'email',
       align: 'left',
     },
-    
+
     {
       text: 'Is Active',
       sortable: true,
@@ -56,7 +56,7 @@ export default class AdminUsers extends Vue {
       value: 'is_superuser',
       align: 'left',
     },
-   
+
   ];
   get users() {
     return readAdminUsers(this.$store);

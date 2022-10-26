@@ -33,7 +33,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import {
-  
+
   IUserProfileCreate,
 } from '@/interfaces';
 import { dispatchGetUsers, dispatchCreateUser } from '@/store/admin/actions';

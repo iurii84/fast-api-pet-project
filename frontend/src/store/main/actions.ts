@@ -26,7 +26,7 @@ import {
     commitRegisterDisplayDevice,
     commitRegisterDataBind,
     commitDeleteDatabind,
-    commitUpdateDatabind
+    commitUpdateDatabind,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -230,9 +230,9 @@ export const actions = {
             commitRegisterDevice(context, response.data);
             commitAddNotification(context, { content: 'Device ' + response.data.uuid + ' successfully registered!', color: 'success' });
             // update list of unregistered devices
-            dispatchGetNotRegisteredDevices(context)
+            dispatchGetNotRegisteredDevices(context);
             // update list of registered devices
-            dispatchGetAwailableDevices(context)
+            dispatchGetAwailableDevices(context);
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -246,9 +246,9 @@ export const actions = {
             ]))[0];
             commitUpdateDevice(context, response.data);
             commitAddNotification(context, { content: 'Device ' + response.data.uuid + ' successfully updated!', color: 'success' });
-            
+
             // update list of registered devices
-            dispatchGetAwailableDevices(context)
+            dispatchGetAwailableDevices(context);
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -263,9 +263,9 @@ export const actions = {
             commitDeleteDevice(context, response.data);
             commitAddNotification(context, { content: 'Device with id ' + response.data.id + ' was successfully removed from DB!', color: 'success' });
             // update list of unregistered devices
-            dispatchGetNotRegisteredDevices(context)
+            dispatchGetNotRegisteredDevices(context);
             // update list of registered devices
-            dispatchGetAwailableDevices(context)
+            dispatchGetAwailableDevices(context);
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -296,20 +296,19 @@ export const actions = {
     },
 
     async actionGetTask(context: MainContext, task_id: string) {
-        console.log("dispatchGetTask called")
+        console.log('dispatchGetTask called');
         try {
             let success = false;
             while (!success) {
                 const response = await api.getTask(context.state.token, task_id);
                 if (response.data) {
-                    if (response.data.task_state != "SUCCESS") {
-                        await delay(5000)
-                    }
-                    else {
-                        success = true
+                    if (response.data.task_state != 'SUCCESS') {
+                        await delay(5000);
+                    } else {
+                        success = true;
                         commitAddNotification(context, { content: 'COMPRESS TASK IS FINISHED', color: 'success' });
                     }
-                }     
+                }
             }
         } catch (error) {
             await dispatchCheckApiError(context, error);
@@ -349,9 +348,9 @@ export const actions = {
             ]))[0];
             commitRegisterDataBind(context, response.data);
             commitAddNotification(context, { content: 'Databind ' + response.data.id + ' successfully registered!', color: 'success' });
-            // update databind list 
-            dispatchDeviceDataBind(context)
-           
+            // update databind list
+            dispatchDeviceDataBind(context);
+
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -366,8 +365,8 @@ export const actions = {
             commitDeleteDatabind(context, response.data);
             commitAddNotification(context, { content: 'Databind with id ' + response.data.id + ' was successfully removed from DB!', color: 'success' });
             // update list of databinds
-            dispatchDeviceDataBind(context)
-            
+            dispatchDeviceDataBind(context);
+
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
@@ -381,18 +380,18 @@ export const actions = {
             ]))[0];
             commitUpdateDatabind(context, response.data);
             commitAddNotification(context, { content: 'Databind ' + response.data.id + ' was successfully updated!', color: 'success' });
-            
+
             /// update list of databinds
-            dispatchDeviceDataBind(context)
+            dispatchDeviceDataBind(context);
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
     },
-    
+
 };
 
 function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
+    return new Promise( (resolve) => setTimeout(resolve, ms) );
 }
 
 const { dispatch } = getStoreAccessors<MainState | any, State>('');

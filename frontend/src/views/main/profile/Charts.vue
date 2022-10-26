@@ -25,18 +25,16 @@
       <v-select
           @input="when_time_interval_changed" 
           v-model="selected"
-          :reduce="(option) => option.id"
-          :options="[
-            { label: '15m', id: 15 },
-            { label: '1H', id: 1 * 60 },
-            { label: '4H', id: 4 * 60},
-            { label: '12H', id: 12 * 60},
-            { label: '24H', id: 24 * 60},
-            { label: '3d', id: 24 * 60 * 3},
-            { label: '1w', id: 24 * 60 * 7},
-    
+          dense
+          :items="[
+            { text: '15m', value: 15 },
+            { text: '1H', value: 1 * 60 },
+            { text: '4H', value: 4 * 60},
+            { text: '12H', value: 12 * 60},
+            { text: '24H', value: 24 * 60},
+            { text: '3d', value: 24 * 60 * 3},
+            { text: '1w', value: 24 * 60 * 7},
           ]"
-          :clearable=false
       />
     </div>
     <br>
@@ -54,9 +52,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 
 import Vue from 'vue'
-import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css';
-Vue.component('v-select', vSelect);
+
 am4core.useTheme(am4themes_animated);
 
 

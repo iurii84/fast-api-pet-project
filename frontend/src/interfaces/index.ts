@@ -42,20 +42,20 @@ export interface ICompressDbPayload {
 
 
 export interface ICompressResponse {
-    task_id: string
+    task_id: string;
 }
 
 
 export interface ITaskGetResponse {
-    task_state: string,
+    task_state: string;
     task: {
         items_found: number;
         is_even: boolean;
         items_selected_to_compress: null;
         db_update: number;
         db_delete: number;
-    },
-    task_message: string
+    };
+    task_message: string;
 }
 
 export interface IDeviceNotRegisteredList {
@@ -117,7 +117,7 @@ export interface IDeviceDataBindList {
     device_uuid: string;
     device_prop: string;
     subscriber_uuid: string;
-    char_placeholder: number
+    char_placeholder: number;
 }
 
 export interface IDeviceGetParams {
