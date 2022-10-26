@@ -260,8 +260,6 @@
 </template>
 
 <script>
-    import vSelect from 'vue-select';
-    import 'vue-select/dist/vue-select.css';
     import { Store } from 'vuex';
     import Vue from 'vue';
     import api from "@/api"
@@ -282,9 +280,6 @@
         readAvailableDisplayDevices,
         readUpdateDatabindResponse
         } from '@/store/main/getters';
-
-        Vue.component('v-select', vSelect);
-
 
     export default {
         data() {

@@ -2,7 +2,7 @@
   <div>
     <v-navigation-drawer  
       :mini-variant="miniDrawer"
-      width="280"
+      width="290"
       v-model="showDrawer" 
       fixed 
       app
@@ -53,6 +53,13 @@
                   <v-icon>mdi-arrow-collapse-vertical</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Compress DB</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item to="/main/profile/static_display_data">
+                <v-list-item-icon>
+                  <v-icon>mdi-clipboard-list-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Static Display Data</v-list-item-title>
               </v-list-item>
 
             </v-list-group>
