@@ -81,11 +81,12 @@
                             <v-select 
                                 id="device_location_selector"  
                                 v-model="device_location_input" 
-                                :options="device_locations" 
+                                :items="device_locations_api" 
+                                item-text=name
                                 required 
                                 placeholder="Select device location"  
+                                return-object
                             >
-
                             </v-select>
                             <div v-if="device_location_input != null">
                                 <br>
@@ -145,16 +146,18 @@
                                 <v-select 
                                     id="device_location_selector"  
                                     v-model="device_update_location_input" 
-                                    :options="device_locations" 
+                                    :items="device_locations_api" 
+                                    item-text=name
                                     required 
                                     placeholder="Select device location"       
+                                    return-object
                                 >
                                 </v-select>
                                                              
-                                <div v-if="device_location_input != null">
+                                <!-- <div v-if="device_location_input != null">
                                     <br>
                                     description:  {{device_update_location_input.description}}
-                                </div>
+                                </div> -->
                             </b-form-group>
 
                             <label for="field_input_name" class="field_input">Name: </label>
@@ -174,8 +177,6 @@
 </template>
 
 <script>
-    import vSelect from 'vue-select';
-    import 'vue-select/dist/vue-select.css';
     import { Store } from 'vuex';
     import Vue from 'vue';
     import api from "@/api"
@@ -197,7 +198,7 @@
         readDeviceUpdateResponse
         } from '@/store/main/getters';
 
-    Vue.component('v-select', vSelect);
+   
     export default { 
  
     methods: {
@@ -206,7 +207,7 @@
             let register_device_obj = {
                 "uuid": this.device_uuid,
                 "name": this.device_name_input,
-                "location": this.device_location_input.id
+                "location": this.device_location_input.location_id
             }
             // perform api call to register device
             dispatchRegisterDevice(this.$store, register_device_obj)
@@ -218,7 +219,7 @@
             this.update_button_inactive = true;
             let update_device_obj = {
                 "name": this.device_update_name_input,
-                "location": this.device_update_location_input.id
+                "location": this.device_update_location_input.location_id
             }
             dispatchUpdateDevice(this.$store, {"payload": update_device_obj, "device_id": this.device_update_id})
             console.log(update_device_obj)
@@ -259,7 +260,8 @@
             // iterate over the all devices
             console.log("typeUpdate()")
             try { 
-                if (this.table_items[0].type != null && this.device_types[0].type_id != null && this.table_items_registered[0].type != null) {
+                if (this.device_types[0].type_id != null && this.table_items_registered[0].type != null) {
+                    console.log("typeUpdate() - after if...")
                     let unreg_devices_arr = JSON.parse(JSON.stringify(this.table_items));
                     console.log("unreg_devices_arr: " + JSON.stringify(unreg_devices_arr))
                     for (let [index, val] of this.table_items.entries()) {
@@ -415,12 +417,6 @@
             //on vuex parameter change - execute this function
             this.device_locations_api = newValue
 
-            var device_locations_arr = []
-            newValue.forEach(element => {
-                var list_obj = {label: element.name, id: element.location_id, description: element.description}
-                device_locations_arr.push(list_obj)
-            });
-            this.device_locations = device_locations_arr
             this.locationUpdate()
         },
         readDeviceTypes(newValue, oldValue) {
@@ -447,9 +443,7 @@
             device_update_id: '',
             device_update_name_input: '',
             device_update_location_input: null,
-            // location_pushed: false,
-
-            device_locations: [],
+            
             device_locations_api: [],
             device_types: [],
             
@@ -490,12 +484,6 @@
         dispatchGetAwailableDevices(this.$store)
     },
 
-    beforeDestroy() {
-    },
-
-    updated() { 
-        // when all items loaded and not null - update device type to string format (device_type is another api)
-    }
 }
 </script>
 
