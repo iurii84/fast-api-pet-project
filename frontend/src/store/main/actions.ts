@@ -27,6 +27,7 @@ import {
     commitRegisterDataBind,
     commitDeleteDatabind,
     commitUpdateDatabind,
+    commitSubscribedDataBindList,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -388,6 +389,18 @@ export const actions = {
         }
     },
 
+    async actionGetSubscribedDataBindList(context: MainContext, subscriber_uuid: string) {
+        try {
+            const response = await api.getSubscribedDataBindList(subscriber_uuid);
+            if (response.data) {
+                commitSubscribedDataBindList(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
+    },
+
 };
 
 function delay(ms: number) {
@@ -425,3 +438,4 @@ export const dispatchDeviceGetParams = dispatch(actions.actionGetDeviceParams);
 export const dispatchRegisterDataBind = dispatch(actions.actionRegisterDataBind);
 export const dispatchDeleteDatabind = dispatch(actions.actionDeleteDatabind);
 export const dispatchUpdateDatabind = dispatch(actions.actionUpdateDatabind);
+export const dispatchSubscribedDataBind = dispatch(actions.actionGetSubscribedDataBindList);

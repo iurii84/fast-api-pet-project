@@ -26,6 +26,7 @@ const defaultState: MainState = {
   registerDataBind: null,
   deleteDatabind: null,
   updateDatabind: null,
+  subscribedDataBind: [],
 };
 
 export const mainModule = {

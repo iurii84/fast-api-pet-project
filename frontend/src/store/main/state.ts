@@ -44,4 +44,5 @@ export interface MainState {
     registerDataBind: IDataBingRegisterResponse | null;
     deleteDatabind: IDatabindDeleteResponse | null;
     updateDatabind: IDatabindUpdateResponse | null;
+    subscribedDataBind: IDeviceDataBindList[];
 }

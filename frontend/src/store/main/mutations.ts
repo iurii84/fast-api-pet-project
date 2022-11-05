@@ -20,6 +20,9 @@ import { State } from '../state';
 
 
 export const mutations = {
+    setSubscribedDataBindList(state: MainState, payload: IDeviceDataBindList[]) {
+        state.subscribedDataBind = payload;
+    },
     setUpdateDatabind(state: MainState, payload: IDatabindUpdateResponse) {
         state.updateDatabind = payload;
     },
@@ -113,3 +116,4 @@ export const commitDeviceGetParams = commit(mutations.setDeviceGetParams);
 export const commitRegisterDataBind = commit(mutations.setRegisterDataBind);
 export const commitDeleteDatabind = commit(mutations.setDeleteDatabind);
 export const commitUpdateDatabind = commit(mutations.setUpdateDatabind);
+export const commitSubscribedDataBindList = commit(mutations.setSubscribedDataBindList);

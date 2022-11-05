@@ -20,6 +20,10 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async getSubscribedDataBindList(subscriber_uuid: string) {
+    let response = await axios.get(`${apiUrl}/api/v1/device_data_bind`, { params: { subscriber_uuid } });
+    return response
+  },
   async updateDatabind(token: string, data: IDatabindUpdatePatch, deviceId: number) {
     return await axios.patch(`${apiUrl}/api/v1/device_data_bind/${deviceId}`, data);
   },

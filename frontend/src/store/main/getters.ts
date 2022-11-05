@@ -27,6 +27,7 @@ export const getters = {
     device_params: (state: MainState) => state.deviceGetParams,
     register_databind_response: (state: MainState) => state.registerDataBind,
     update_databind_response: (state: MainState) => state.updateDatabind,
+    subscribed_data_bind_list: (state: MainState) => state.subscribedDataBind,
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -51,3 +52,4 @@ export const readDeviceDataBindList = read(getters.device_data_bind_list);
 export const readDeviceParams = read(getters.device_params);
 export const readRegisterDataBindResponse = read(getters.register_databind_response);
 export const readUpdateDatabindResponse = read(getters.update_databind_response);
+export const readSubscribedDataBindList = read(getters.subscribed_data_bind_list);

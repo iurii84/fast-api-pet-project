@@ -23,11 +23,12 @@ import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator';
 
 @Component
 export default class ChartSettingsModal extends Vue {
-    @Prop({default: 0}) public load_interval: number;
+    // @Prop({default: 0}) public load_interval: number;
 
     public data() {
         return {
-            update_chart_after: '',
+            load_interval: null,
+            update_chart_after: null,
             update_chart_interval_options: [
                 { value: 1, text: 'Every second' },
                 { value: 3, text: 'Each 3 seconds' },
@@ -39,7 +40,7 @@ export default class ChartSettingsModal extends Vue {
     }
     public mounted() {
         if (localStorage.update_chart_after) {
-                this.update_chart_after = localStorage.update_chart_after;
+                // this.update_chart_after = localStorage.update_chart_after;
             }
     }
 
