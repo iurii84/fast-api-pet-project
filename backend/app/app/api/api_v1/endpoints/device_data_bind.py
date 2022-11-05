@@ -13,11 +13,13 @@ router = APIRouter()
 
 @router.get("", response_model=List[schemas.DeviceDataBindBase])
 async def get_device_data_binds(db: Session = Depends(deps.get_db),
+                                subscriber_uuid=None,
                                 skip: int = 0,
                                 limit: int = 10) -> Any:
     device_data_binds = crud.device_data_bind.get_multi(db,
                                                         skip=skip,
-                                                        limit=limit)
+                                                        limit=limit,
+                                                        subscriber_uuid=subscriber_uuid)
     return device_data_binds
 
 

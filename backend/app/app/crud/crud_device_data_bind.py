@@ -14,11 +14,14 @@ from app.schemas import RegisterDeviceDataBind, PatchDeviceDataBind
 
 
 @cache.cache()
-def cacheable_get_data_binders(skip: int, limit: int):
+def cacheable_get_data_binders(skip: int, limit: int, subscriber_uuid: UUID4):
     db = SessionLocal()
-
-    res = db.query(DeviceDataBind).offset(skip).limit(limit).all()
-
+    res = None
+    if subscriber_uuid is None:
+        res = db.query(DeviceDataBind).offset(skip).limit(limit).all()
+    else:
+        res = db.query(DeviceDataBind).where(DeviceDataBind.subscriber_uuid == subscriber_uuid).\
+            offset(skip).limit(limit).all()
     db.close()
     return jsonable_encoder(res)
 
@@ -36,9 +39,12 @@ def cacheable_get_subscribers(uuid: str, device_prop: str):
 
 class CRUDDeviceDataBind(CRUDBase[DeviceDataBind, DeviceDataBind, DeviceDataBind]):
 
-    def get_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> List[DeviceDataBind]:
+    def get_multi(self, db: Session, *,
+                  skip: int = 0,
+                  limit: int = 100,
+                  subscriber_uuid: UUID4 = None) -> List[DeviceDataBind]:
 
-        return cacheable_get_data_binders(skip=skip, limit=limit)
+        return cacheable_get_data_binders(skip=skip, limit=limit, subscriber_uuid=subscriber_uuid)
 
     def get_subscribers(self, uuid: UUID4, device_prop: str):
         return cacheable_get_subscribers(uuid=str(uuid), device_prop=device_prop)
