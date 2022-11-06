@@ -4,6 +4,21 @@
             <div class="headline primary--text">Static Display Data</div>
         </v-card-title>
 
+        <v-menu
+            v-model="show_context_menu"
+            :position-x="context_menu_x"
+            :position-y="context_menu_y"
+            absolute
+            offset-y>
+
+            <v-list>
+                <v-list-item
+                @click="onClickRemoveDatabind()">
+                    <v-list-item-title>Remove databind...</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
+
         <v-stepper
             v-model="step"
             vertical
@@ -100,20 +115,20 @@
                                         class="one_char_input"
                                         >
                                         <v-tooltip
-                                            bottom
+                                            top
                                             :disabled="otp_data[row_idx][col_idx].databind_id == null">
                                             <template v-slot:activator="{ on, attrs }">
                                                 <div
                                                     v-bind="attrs" 
-                                                    v-on="on">
+                                                    v-on="on"
+                                                    @contextmenu="context_menu_show($event, otp_data[row_idx][col_idx].databind_id)"
+                                                    :ripple="false">
                                                     <v-otp-input
-                                                        
                                                         :id=[row_idx]+[otp_id_devider]+[col_idx]
                                                         v-model="otp_data[row_idx][col_idx].letter"
                                                         :set="state = otp_data[row_idx][col_idx].disabled"
                                                         v-bind:dark="state"
                                                         v-bind:disabled="state"
-                                                        
                                                         length="1"
                                                         @drop="onDrop($event, row_idx, col_idx)"
                                                         @dragover.prevent
@@ -140,7 +155,13 @@
                 </v-btn>
                 <v-btn 
                     text
-                    @click="clearDisplay">
+                    @click="step = 1">
+                Back
+                </v-btn>
+                <v-btn 
+                    text
+                    @click="clearDisplay"
+                    color="warning">
                 Clear display
                 </v-btn>
             </v-stepper-content>
@@ -200,7 +221,6 @@
         dispatchDeviceTypes,
         dispatchGetAwailableDisplayDevices,
         dispatchSubscribedDataBind
-        
         } from '@/store/main/actions';
 
     import { 
@@ -208,7 +228,6 @@
         readDeviceLocations, 
         readDeviceTypes,
         readSubscribedDataBindList,
-        
         } from '@/store/main/getters';
 
     import {
@@ -230,6 +249,11 @@
                 selected_display: null,
 
                 subscribed_databinds: null,
+
+                show_context_menu: false,
+                context_menu_x: 0,
+                context_menu_y: 0,
+                context_selected_databind: null,  
             }
         },
         mounted() {
@@ -241,6 +265,52 @@
             },
 
         methods: {
+            onClickRemoveDatabind() {
+                // remove databind by id from screen
+                if (this.context_selected_databind != null) {
+                    // remove from hidden list
+                    const index = this.hidden_subscribed_databinds.indexOf(this.context_selected_databind);
+                    if (index !== -1) {
+                        this.hidden_subscribed_databinds.splice(index, 1);
+                    }
+
+                    let taken_positions = [];
+                    let taken_line = null;
+                    
+                    // find all positions on screen
+                    this.otp_data.forEach((line, ln_index) => {
+                        line.forEach((item, item_index) => {
+                            if (item.databind_id === this.context_selected_databind) {
+                                taken_positions.push(item_index)
+                                taken_line = ln_index
+                            }
+                        });
+                    });
+
+                    // clear parameters for found positions + 1 position before and 1 position after
+                    for (let i = -1; i < taken_positions.length + 2; i++) {
+                        if (this.otp_data[taken_line][i + taken_positions[0]] != null) {
+                            this.otp_data[taken_line][i + taken_positions[0]].disabled = false;
+                            this.otp_data[taken_line][i + taken_positions[0]].unavailable = false;
+                            this.otp_data[taken_line][i + taken_positions[0]].databind_id = null;
+                        }
+                    }
+                }
+            },
+
+            context_menu_show (e, databind_id) {
+                // show context menu if 'context_selected_databind' is not null
+                this.context_selected_databind = databind_id
+                e.preventDefault()
+                this.show_context_menu = false
+                this.context_menu_x = e.clientX
+                this.context_menu_y = e.clientY
+                this.$nextTick(() => {
+                    if (this.context_selected_databind) {
+                        this.show_context_menu = true
+                    }
+                })
+            },
             generate_otp_obj() {
                 // generate empty otp obj
                 let otp_obj = []
@@ -249,7 +319,7 @@
                     let otp_line = [];
                     for (let i = 0; i < 20; i++){
                         otp_line.push({
-                            "letter": ' ', 
+                            "letter": '', 
                             "disabled": false,
                             "unavailable": false,
                             "databind_id": null})
@@ -338,7 +408,7 @@
                             can_be_dropped = false
                             err_validator = "the binder is intersected with already placed binders or you should have at least 1 space between the binders"
                         }
-                        if (this.otp_data[row_idx][index].letter != " ") {
+                        if (this.otp_data[row_idx][index].letter != "") {
                             can_be_dropped = false
                             err_validator = "the binder is intersected with the text"
                         }
