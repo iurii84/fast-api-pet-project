@@ -13,6 +13,7 @@ import {
     IDataBingRegisterResponse,
     IDatabindDeleteResponse,
     IDatabindUpdateResponse,
+    IPostStaticDisplayFrame,
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -45,4 +46,5 @@ export interface MainState {
     deleteDatabind: IDatabindDeleteResponse | null;
     updateDatabind: IDatabindUpdateResponse | null;
     subscribedDataBind: IDeviceDataBindList[];
+    registerStaticDisplayFrame: IPostStaticDisplayFrame | null;
 }

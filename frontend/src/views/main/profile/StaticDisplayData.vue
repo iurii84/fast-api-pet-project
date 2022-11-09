@@ -34,7 +34,7 @@
             <v-stepper-content step="1">
                 <v-card
                     class="mb-12"
-                    height="200px"
+                    height="400px"
                 >
                     <v-select
                         :items="display_devices_list"
@@ -46,8 +46,26 @@
                     >
 
                     </v-select>
+
+                    <b-form-group id="display_frame_name_input_group" label="Display frame name:" label-for="display_frame_name_input"  >
+                        <b-form-input
+                                id="display_frame_name_input"
+                                v-model="display_name"
+                                type="text" >
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group id="display_frame_priority_input_group" label="Display frame priority:" label-for="display_frame_priority_input"  >
+                        <b-form-input
+                                id="display_frame_priority_input"
+                                v-model="display_priority"
+                                type="number" >
+                        </b-form-input>
+                    </b-form-group>
                
-                    <div v-if="selected_display">
+                    <div 
+                        v-if="selected_display"
+                        id="display_info_section">
                         ID: {{selected_display.id}}
                         <br>
                         UUID: {{selected_display.uuid}}
@@ -149,7 +167,7 @@
                 </v-card>
                 <v-btn
                     color="primary"
-                    @click="step = 3"
+                    @click="post_display_data()"
                     >
                 Continue
                 </v-btn>
@@ -220,7 +238,8 @@
         dispatchDeviceLocations,
         dispatchDeviceTypes,
         dispatchGetAwailableDisplayDevices,
-        dispatchSubscribedDataBind
+        dispatchSubscribedDataBind,
+        dispatchRegisterStaticDisplayFrame
         } from '@/store/main/actions';
 
     import { 
@@ -241,6 +260,8 @@
                 otp_data: null,
                 otp_id_devider: ":",
                 hidden_subscribed_databinds: [],
+                display_name: null,
+                display_priority: null,
 
                 device_locations: null,
                 device_types: null,
@@ -265,6 +286,22 @@
             },
 
         methods: {
+            generate_backend_obj() {
+                return {
+                    "device_uuid": this.selected_display.uuid,
+                    "frame_name": this.display_name,
+                    "frame_priority": this.display_priority,
+                    "data_json": this.otp_data,
+                    "placed_databinds": this.hidden_subscribed_databinds,
+                    "is_active": false
+                }
+
+            },
+            post_display_data() {
+                let be_data = this.generate_backend_obj()
+                console.log(be_data)
+                dispatchRegisterStaticDisplayFrame(this.$store, be_data)
+            },
             onClickRemoveDatabind() {
                 // remove databind by id from screen
                 if (this.context_selected_databind != null) {
@@ -473,5 +510,9 @@
    .one_char_input {
     width: 40px;
     margin-left: 5px !important;
+   }
+
+   #display_frame_name_input_group {
+    margin-top: 15px;
    }
 </style>

@@ -27,6 +27,7 @@ const defaultState: MainState = {
   deleteDatabind: null,
   updateDatabind: null,
   subscribedDataBind: [],
+  registerStaticDisplayFrame: null,
 };
 
 export const mainModule = {

@@ -9,6 +9,7 @@ import {
   IDeviceUpdate,
   IDataBingRegisterPost,
   IDatabindUpdatePatch,
+  IPostStaticDisplayFrame,
 } from './interfaces';
 
 function authHeaders(token: string) {
@@ -20,6 +21,10 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async postStaticDisplayFrame(token: string, data: IPostStaticDisplayFrame) {
+    let response = await axios.post(`${apiUrl}/api/v1/static_display_data`, data);
+    return response
+  },
   async getSubscribedDataBindList(subscriber_uuid: string) {
     let response = await axios.get(`${apiUrl}/api/v1/device_data_bind`, { params: { subscriber_uuid } });
     return response
