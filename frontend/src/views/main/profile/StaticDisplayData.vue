@@ -4,20 +4,12 @@
             <div class="headline primary--text">Static Display Data</div>
         </v-card-title>
 
-        <v-menu
-            v-model="show_context_menu"
-            :position-x="context_menu_x"
-            :position-y="context_menu_y"
-            absolute
-            offset-y>
-
-            <v-list>
-                <v-list-item
-                @click="onClickRemoveDatabind()">
-                    <v-list-item-title>Remove databind...</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
+        <ContextMenuRemoveDatabind
+            :position_x="context_menu_x"
+            :position_y="context_menu_y"
+            :show="show_context_menu"
+            @removeDatabindClicked="onClickRemoveDatabind()">
+        </ContextMenuRemoveDatabind>
 
         <v-stepper
             v-model="step"
@@ -100,25 +92,12 @@
                     height="400px"
                     >
                     <v-spacer class="ma-2"></v-spacer>
-                    <div>
-                        <v-badge
-                                    color="green"
-                                    v-bind:hidden="isSubscribedDatabindHidden(n.id)"
-                                    :content="n.char_placeholder"
-                                    v-for="n in subscribed_databinds"
-                                    overlap
-                                    offset-x="15"
-                                    offset-y="15"
-                                    >
-                            <v-chip
-                                class="ma-2"
-                                draggable
-                                :key="n.binder_name"
-                                @dragstart="startDrag($event, n)">
-                                    {{n.binder_name}}   
-                            </v-chip>
-                        </v-badge>
-                    </div>
+                    
+                    <DatabindDraggableItems
+                        :subscribed_databinds="subscribed_databinds"
+                        :hidden_subscribed_databinds="hidden_subscribed_databinds"
+                        @databind_drag_start="startDrag">
+                    </DatabindDraggableItems>
 
                     <v-spacer class="ma-12"></v-spacer>
 
@@ -253,6 +232,9 @@
         commitAddNotification,
     } from '@/store/main/mutations';
 
+    import ContextMenuRemoveDatabind from '@/views/main/profile/StaticDisplayDataComponents/ContextMenuRemoveDatabind.vue';
+    import DatabindDraggableItems from '@/views/main/profile/StaticDisplayDataComponents/DatabindDraggableItems.vue';
+
     export default {
         data () {
             return {
@@ -276,6 +258,10 @@
                 context_menu_y: 0,
                 context_selected_databind: null,  
             }
+        },
+        components: {
+            ContextMenuRemoveDatabind,
+            DatabindDraggableItems
         },
         mounted() {
                 // called for initiate the list of devices load from api 
@@ -386,6 +372,8 @@
             
             startDrag(evt, item) {
                 console.log("startDrag")
+                console.log(evt)
+                console.log(item)
                 evt.dataTransfer.dropEffect = 'move'
                 evt.dataTransfer.effectAllowed = 'move'
                 evt.dataTransfer.setData('databindID', item.id)
@@ -454,10 +442,7 @@
 
                 return {"result": can_be_dropped, "err_validation": err_validator}
             },
-            isSubscribedDatabindHidden(databind_id) {
-                let is_hidden = this.hidden_subscribed_databinds.findIndex(item => item == databind_id) > -1; 
-                return is_hidden
-            },
+            
             onDisplaySelected() {
                 console.log("onDisplaySelected")
                 dispatchSubscribedDataBind(this.$store, this.selected_display.uuid)
