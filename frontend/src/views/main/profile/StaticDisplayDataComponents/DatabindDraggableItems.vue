@@ -2,9 +2,9 @@
     <div>
         <v-badge
                 color="blue"
-                v-bind:hidden="isSubscribedDatabindHidden(n.id)"
-                :content="n.char_placeholder"
-                v-for="n in subscribed_databinds"
+                v-bind:hidden="isSubscribedDatabindHidden(databind.id)"
+                :content="databind.char_placeholder"
+                v-for="databind in subscribed_databinds"
                 overlap
                 offset-x="20"
                 offset-y="20"
@@ -12,9 +12,9 @@
             <v-chip
                 class="ma-2"
                 draggable
-                :key="n.binder_name"
-                @dragstart="$emit('databind_drag_start', $event, n)">
-                    {{n.binder_name}}   
+                :key="databind.binder_name"
+                @dragstart="$emit('databind_drag_start', $event, databind)">
+                    {{databind.binder_name}}   
             </v-chip>
         </v-badge>
     </div>
