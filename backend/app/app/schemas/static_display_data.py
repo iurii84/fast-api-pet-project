@@ -8,7 +8,9 @@ class StaticDisplayData(BaseModel):
     frame_name: Union[None, str]
     device_uuid: UUID4
     frame_priority: Union[None, int]
-    data_json: dict
+    data_json: list
+    placed_databinds: Union[None, object]
+    is_active: bool
 
     class Config:
         orm_mode = True
