@@ -23,3 +23,10 @@ class StaticDisplayDataRegister(BaseModel):
     data_json: list
     placed_databinds: List[int]
     is_active: bool
+
+
+class DeleteStaticDataFrame(BaseModel):
+    id: Union[None, int]
+
+    class Config:
+        orm_mode = True
