@@ -169,3 +169,12 @@ export interface IPostStaticDisplayFrame {
     data_json: object;
     placed_databinds_ids: number[];
 }
+
+export interface IGetStaticDisplayFrame {
+    id: number;
+    display_uuid: string;
+    display_frame_name: string;
+    display_frame_priority: number;
+    data_json: object;
+    placed_databinds_ids: number[];
+}

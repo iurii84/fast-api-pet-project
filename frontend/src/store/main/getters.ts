@@ -28,6 +28,7 @@ export const getters = {
     register_databind_response: (state: MainState) => state.registerDataBind,
     update_databind_response: (state: MainState) => state.updateDatabind,
     subscribed_data_bind_list: (state: MainState) => state.subscribedDataBind,
+    static_display_data_list: (state: MainState) => state.getStaticDisplayFrameList
 };
 
 const {read} = getStoreAccessors<MainState, State>('');
@@ -53,3 +54,4 @@ export const readDeviceParams = read(getters.device_params);
 export const readRegisterDataBindResponse = read(getters.register_databind_response);
 export const readUpdateDatabindResponse = read(getters.update_databind_response);
 export const readSubscribedDataBindList = read(getters.subscribed_data_bind_list);
+export const readStaticDisplayDataList = read(getters.static_display_data_list);

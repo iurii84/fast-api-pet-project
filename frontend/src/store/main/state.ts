@@ -14,6 +14,7 @@ import {
     IDatabindDeleteResponse,
     IDatabindUpdateResponse,
     IPostStaticDisplayFrame,
+    IGetStaticDisplayFrame,
 } from '@/interfaces';
 
 export interface AppNotification {
@@ -47,4 +48,5 @@ export interface MainState {
     updateDatabind: IDatabindUpdateResponse | null;
     subscribedDataBind: IDeviceDataBindList[];
     registerStaticDisplayFrame: IPostStaticDisplayFrame | null;
+    getStaticDisplayFrameList: IGetStaticDisplayFrame[]
 }

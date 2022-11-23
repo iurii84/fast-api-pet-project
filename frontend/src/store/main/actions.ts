@@ -29,6 +29,7 @@ import {
     commitUpdateDatabind,
     commitSubscribedDataBindList,
     commitRegisterStaticDisplayFrame,
+    commitGetStaticDisplayDataList,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -410,11 +411,24 @@ export const actions = {
             ]))[0];
             commitRegisterStaticDisplayFrame(context, response.data);
             commitAddNotification(context, { content: 'Static display frame ' + response.data.id + ' successfully registered!', color: 'success' });
+            dispatchGetStaticDisplayDataList(context);
             
 
         } catch (error) {
             await dispatchCheckApiError(context, error);
         }
+    },
+
+    async actionGetStaticDisplayDataList(context: MainContext) {
+        try {
+            const response = await api.getStaticDisplayFrames();
+            if (response.data) {
+                commitGetStaticDisplayDataList(context, response.data);
+            }
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+
     },
 
 };
@@ -456,3 +470,4 @@ export const dispatchDeleteDatabind = dispatch(actions.actionDeleteDatabind);
 export const dispatchUpdateDatabind = dispatch(actions.actionUpdateDatabind);
 export const dispatchSubscribedDataBind = dispatch(actions.actionGetSubscribedDataBindList);
 export const dispatchRegisterStaticDisplayFrame = dispatch(actions.actionRegisterStaticDisplayFrame);
+export const dispatchGetStaticDisplayDataList = dispatch(actions.actionGetStaticDisplayDataList);

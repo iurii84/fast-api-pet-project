@@ -21,6 +21,10 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async getStaticDisplayFrames() {
+    let response = await axios.get(`${apiUrl}/api/v1/static_display_data`);
+    return response
+  },
   async postStaticDisplayFrame(token: string, data: IPostStaticDisplayFrame) {
     let response = await axios.post(`${apiUrl}/api/v1/static_display_data`, data);
     return response
