@@ -30,6 +30,7 @@ import {
     commitSubscribedDataBindList,
     commitRegisterStaticDisplayFrame,
     commitGetStaticDisplayDataList,
+    commitDeleteStaticDisplayFrame,
 } from './mutations';
 import { AppNotification, MainState } from './state';
 
@@ -431,6 +432,23 @@ export const actions = {
 
     },
 
+    async actionDeleteStaticDisplayFrame(context: MainContext, frame_id: number) {
+        try {
+            const response = (await Promise.all([
+                api.deleteStaticDisplayFrame(context.state.token, frame_id),
+                await new Promise((resolve, reject) => setTimeout(() => resolve(), 500)),
+            ]))[0];
+            commitDeleteStaticDisplayFrame(context, response.data);
+            commitAddNotification(context, { content: 'Frame with id ' + response.data.id + ' was successfully removed from DB!', color: 'success' });
+            // update list of frames
+            dispatchGetStaticDisplayDataList(context);
+
+        } catch (error) {
+            await dispatchCheckApiError(context, error);
+        }
+    },
+
+
 };
 
 function delay(ms: number) {
@@ -471,3 +489,4 @@ export const dispatchUpdateDatabind = dispatch(actions.actionUpdateDatabind);
 export const dispatchSubscribedDataBind = dispatch(actions.actionGetSubscribedDataBindList);
 export const dispatchRegisterStaticDisplayFrame = dispatch(actions.actionRegisterStaticDisplayFrame);
 export const dispatchGetStaticDisplayDataList = dispatch(actions.actionGetStaticDisplayDataList);
+export const dispatchDeleteStaticDisplayFrame = dispatch(actions.actionDeleteStaticDisplayFrame);

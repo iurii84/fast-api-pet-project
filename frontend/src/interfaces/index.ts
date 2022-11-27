@@ -178,3 +178,7 @@ export interface IGetStaticDisplayFrame {
     data_json: object;
     placed_databinds_ids: number[];
 }
+
+export interface IStaticDisplayFrameDeleteResponse {
+    id: number;
+}

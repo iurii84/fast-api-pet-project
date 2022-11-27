@@ -21,6 +21,9 @@ function authHeaders(token: string) {
 }
 
 export const api = {
+  async deleteStaticDisplayFrame(token: string, frameId: number) {
+    return await axios.delete(`${apiUrl}/api/v1/static_display_data/${frameId}`);
+  },
   async getStaticDisplayFrames() {
     let response = await axios.get(`${apiUrl}/api/v1/static_display_data`);
     return response

@@ -5,21 +5,29 @@
         </v-card-title>
 
         <ScreensTable
-            :static_display_data_list="static_display_data_frames">
+            :static_display_data_list="static_display_data_frames"
+            @delete_static_frame="onDeleteStaticFrame">
         </ScreensTable>
+
+        <DeleteItemModal
+            toolbar_title="Delete Static Frame"
+            :modal_message="deleteModalMessage"
+            :modal_show="delete_frame"
+            @delete_item_modal_show="(show) => delete_frame = show"
+            @remove_item_confirmed="onStaticFrameDeleteConfirmed"
+            @remove_item_canceled="onStaticFrameDeleteCanceled">
+        </DeleteItemModal>
 
        
         <br>
 
         <v-dialog
-            v-model="dialog"
+            v-model="create_frame"
             max-width="1050px"
             >
             <template v-slot:activator="{ on, attrs }">
                  <!-- Create static data frame modal -->
                 <v-btn
-                    
-                
                     v-bind="attrs"
                     v-on="on"
                 >
@@ -29,195 +37,189 @@
 
           
 
-                <v-toolbar
-                    color="primary"
-                    dark
-                    >
-                    <v-btn
-                        icon
-                        dark
-                        @click="dialog = false"
-                        >
-
-                    <v-icon>mdi-close</v-icon>
-
-                    </v-btn>
-                    
-                    <v-toolbar-title>CREATE FRAME</v-toolbar-title>
-                </v-toolbar>
-
-                <ContextMenuRemoveDatabind
-                    :position_x="context_menu_x"
-                    :position_y="context_menu_y"
-                    :show="show_context_menu"
-                    @removeDatabindClicked="onClickRemoveDatabind()">
-                </ContextMenuRemoveDatabind>
-
-                <v-stepper
-                    v-model="step"
-                    vertical
+            <v-toolbar
+                color="primary"
+                dark
                 >
-                    <v-stepper-step
-                        :complete="step > 1"
-                        step="1"
+                <v-btn
+                    icon
+                    dark
+                    @click="create_frame = false"
                     >
-                        Select display device
-                        <small>You are going to create static display data for selected display device</small>
-                    </v-stepper-step>
-        
-                    <v-stepper-content step="1">
-                        <v-card
-                            class="mb-12"
-                            height="400px"
-                        >
-                            <v-select
-                                :items="display_devices_list"
-                                v-model="selected_display"
-                                @change="onDisplaySelected"
-                                solo
-                                item-text=name
-                                return-object
-                            >
 
-                            </v-select>
+                <v-icon>mdi-close</v-icon>
 
-                            <b-form-group id="display_frame_name_input_group" label="Display frame name:" label-for="display_frame_name_input"  >
-                                <b-form-input
-                                        id="display_frame_name_input"
-                                        v-model="display_name"
-                                        type="text" >
-                                </b-form-input>
-                            </b-form-group>
+                </v-btn>
+                
+                <v-toolbar-title>CREATE FRAME</v-toolbar-title>
+            </v-toolbar>
 
-                            <b-form-group id="display_frame_priority_input_group" label="Display frame priority:" label-for="display_frame_priority_input"  >
-                                <b-form-input
-                                        id="display_frame_priority_input"
-                                        v-model="display_priority"
-                                        type="number" >
-                                </b-form-input>
-                            </b-form-group>
-                    
-                            <div 
-                                v-if="selected_display"
-                                id="display_info_section">
-                                ID: {{selected_display.id}}
-                                <br>
-                                UUID: {{selected_display.uuid}}
-                                <br>
-                                TYPE: {{getDeviceTypeById(selected_display.type).name}}
-                                <br>
-                                LOCATION: {{getDeviceLocationById(selected_display.location).name}}
-                            </div>
-                        </v-card>
-                        <v-btn
-                            color="primary"
-                            @click="step = 2"
-                        >
-                            Continue
-                        </v-btn>
+            <ContextMenuRemoveDatabind
+                :position_x="context_menu_x"
+                :position_y="context_menu_y"
+                :show="show_context_menu"
+                @removeDatabindClicked="onClickRemoveDatabind()">
+            </ContextMenuRemoveDatabind>
 
-                        <v-btn 
-                            text
-                            @click="dialog = false">
-                            Cancel
-                        </v-btn>
-                    </v-stepper-content>
-        
-                    <v-stepper-step
-                        :complete="step > 2"
-                        step="2"
+            <v-stepper
+                v-model="step"
+                vertical
+            >
+                <v-stepper-step
+                    :complete="step > 1"
+                    step="1"
+                >
+                    Select display device
+                    <small>You are going to create static display data for selected display device</small>
+                </v-stepper-step>
+    
+                <v-stepper-content step="1">
+                    <v-card
+                        class="mb-12"
+                        height="400px"
                     >
-                        Drag&drop databinds to display:
-                    </v-stepper-step>
-                
-                    <v-stepper-content step="2">
-                        <v-card
-                            class="mb-12"
-                            height="400px"
-                            >
-                            <v-spacer class="ma-2"></v-spacer>
-                            
-                            <DatabindDraggableItems
-                                :subscribed_databinds="subscribed_databinds"
-                                :hidden_subscribed_databinds="hidden_subscribed_databinds"
-                                @databind_drag_start="startDrag">
-                            </DatabindDraggableItems>
-
-                            <v-spacer class="ma-12"></v-spacer>
-
-                            <Screen
-                                :selected_display="selected_display"
-                                :otp_data="otp_data"
-                                :subscribed_databinds="subscribed_databinds"
-                                @context_menu_clicked="context_menu_show"
-                                @hidden_subscribed_databinds_update="(updated_hidden) => hidden_subscribed_databinds = updated_hidden">
-                            </Screen>
-
-                        </v-card>
-                        <v-btn
-                            color="primary"
-                            @click="step=3"
-                            >
-                            Continue
-                        </v-btn>
-                        <v-btn 
-                            text
-                            @click="step = 1">
-
-                            Back
-                        </v-btn>
-                        <v-btn 
-                            text
-                            @click="clearDisplay"
-                            color="warning">
-
-                            Clear display
-                        </v-btn>
-                    </v-stepper-content>
-                
-                    <v-stepper-step
-                        :complete="step > 3"
-                        step="3"
-                    >
-                        Drag&drop blocks to display:
-                    </v-stepper-step>
-                
-                    <v-stepper-content step="3">
-                        <v-card
-                            class="mb-12"
-                            height="400px"
+                        <v-select
+                            :items="display_devices_list"
+                            v-model="selected_display"
+                            @change="onDisplaySelected"
+                            solo
+                            item-text=name
+                            return-object
                         >
-                            
-                        </v-card>
-                        
-                        <v-card-actions id="delete-decision-buttons-group" class="pa-4">
-                            <v-btn
-                                text
-                                @click="dialog = false"
-                                >
 
-                                Close
+                        </v-select>
 
-                            </v-btn>
-                            
-                            <v-btn
-                                color="primary"
-                                text
-                                @click="post_display_data()"
-                                >
+                        <b-form-group id="display_frame_name_input_group" label="Display frame name:" label-for="display_frame_name_input"  >
+                            <b-form-input
+                                    id="display_frame_name_input"
+                                    v-model="display_name"
+                                    type="text" >
+                            </b-form-input>
+                        </b-form-group>
 
-                                Create new frame
-
-                            </v-btn>
-                        </v-card-actions>
-                    </v-stepper-content>
-                </v-stepper>
+                        <b-form-group id="display_frame_priority_input_group" label="Display frame priority:" label-for="display_frame_priority_input"  >
+                            <b-form-input
+                                    id="display_frame_priority_input"
+                                    v-model="display_priority"
+                                    type="number" >
+                            </b-form-input>
+                        </b-form-group>
                 
+                        <div 
+                            v-if="selected_display"
+                            id="display_info_section">
+                            ID: {{selected_display.id}}
+                            <br>
+                            UUID: {{selected_display.uuid}}
+                            <br>
+                            TYPE: {{getDeviceTypeById(selected_display.type).name}}
+                            <br>
+                            LOCATION: {{getDeviceLocationById(selected_display.location).name}}
+                        </div>
+                    </v-card>
+                    <v-btn
+                        color="primary"
+                        @click="step = 2"
+                    >
+                        Continue
+                    </v-btn>
 
-                
+                    <v-btn 
+                        text
+                        @click="create_frame = false">
+                        Cancel
+                    </v-btn>
+                </v-stepper-content>
+    
+                <v-stepper-step
+                    :complete="step > 2"
+                    step="2"
+                >
+                    Drag&drop databinds to display:
+                </v-stepper-step>
             
-           
+                <v-stepper-content step="2">
+                    <v-card
+                        class="mb-12"
+                        height="400px"
+                        >
+                        <v-spacer class="ma-2"></v-spacer>
+                        
+                        <DatabindDraggableItems
+                            :subscribed_databinds="subscribed_databinds"
+                            :hidden_subscribed_databinds="hidden_subscribed_databinds"
+                            @databind_drag_start="startDrag">
+                        </DatabindDraggableItems>
 
+                        <v-spacer class="ma-12"></v-spacer>
+
+                        <Screen
+                            :selected_display="selected_display"
+                            :otp_data="otp_data"
+                            :subscribed_databinds="subscribed_databinds"
+                            @context_menu_clicked="context_menu_show"
+                            @hidden_subscribed_databinds_update="(updated_hidden) => hidden_subscribed_databinds = updated_hidden">
+                        </Screen>
+
+                    </v-card>
+                    <v-btn
+                        color="primary"
+                        @click="step=3"
+                        >
+                        Continue
+                    </v-btn>
+                    <v-btn 
+                        text
+                        @click="step = 1">
+
+                        Back
+                    </v-btn>
+                    <v-btn 
+                        text
+                        @click="clearDisplay"
+                        color="warning">
+
+                        Clear display
+                    </v-btn>
+                </v-stepper-content>
+            
+                <v-stepper-step
+                    :complete="step > 3"
+                    step="3"
+                >
+                    Drag&drop blocks to display:
+                </v-stepper-step>
+            
+                <v-stepper-content step="3">
+                    <v-card
+                        class="mb-12"
+                        height="400px"
+                    >
+                        
+                    </v-card>
+                    
+                    <v-card-actions id="delete-decision-buttons-group" class="pa-4">
+                        <v-btn
+                            text
+                            @click="create_frame = false"
+                            >
+
+                            Close
+
+                        </v-btn>
+                        
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="post_display_data()"
+                            >
+
+                            Create new frame
+
+                        </v-btn>
+                    </v-card-actions>
+                </v-stepper-content>
+            </v-stepper>
         </v-dialog>
 
    
@@ -234,7 +236,8 @@
         dispatchDeviceTypes,
         dispatchGetAwailableDisplayDevices,
         dispatchSubscribedDataBind,
-        dispatchRegisterStaticDisplayFrame
+        dispatchRegisterStaticDisplayFrame,
+        dispatchDeleteStaticDisplayFrame
         } from '@/store/main/actions';
 
     import { 
@@ -251,6 +254,7 @@
     import DatabindDraggableItems from '@/views/main/profile/StaticDisplayDataComponents/DatabindDraggableItems.vue';
     import Screen from '@/views/main/profile/StaticDisplayDataComponents/Screen.vue';
     import ScreensTable from '@/views/main/profile/StaticDisplayDataComponents/ScreensTable.vue';
+    import DeleteItemModal from '@/components/DeleteItemModal.vue';
 
     export default {
         data () {
@@ -276,7 +280,10 @@
                 context_selected_databind: null,  
 
                 static_display_data_frames: null,
-                dialog: false
+                create_frame: false,
+                delete_frame: false, 
+                
+                frame_to_delete: null
                 
             }
         },
@@ -284,7 +291,8 @@
             ContextMenuRemoveDatabind,
             DatabindDraggableItems,
             Screen,
-            ScreensTable
+            ScreensTable,
+            DeleteItemModal
         },
         mounted() {
                 // called for initiate the list of devices load from api 
@@ -296,6 +304,18 @@
             },
 
         methods: {
+            onStaticFrameDeleteConfirmed() {
+                dispatchDeleteStaticDisplayFrame(this.$store, this.frame_to_delete)
+                this.frame_to_delete = null
+            },
+            onStaticFrameDeleteCanceled() {
+                this.frame_to_delete = null
+            },
+            onDeleteStaticFrame(item) {
+                console.log(item)
+                this.frame_to_delete = item
+                this.delete_frame = true
+            },
             generate_backend_obj() {
                 return {
                     "device_uuid": this.selected_display.uuid,
@@ -308,7 +328,7 @@
 
             },
             post_display_data() {
-                this.dialog = false
+                this.create_frame = false
                 let be_data = this.generate_backend_obj()
                 console.log(be_data)
                 dispatchRegisterStaticDisplayFrame(this.$store, be_data)
@@ -418,6 +438,9 @@
         },
 
         computed: {
+            deleteModalMessage() {
+                return "You are about to delete static frame: " + this.frame_to_delete
+            },
             readAvailableDisplayDevices: function(){
                 return readAvailableDisplayDevices(this.$store)
             },

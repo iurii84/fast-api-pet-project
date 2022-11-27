@@ -15,6 +15,7 @@ import {
     IDatabindUpdateResponse,
     IPostStaticDisplayFrame,
     IGetStaticDisplayFrame,
+    IStaticDisplayFrameDeleteResponse,
 } from '@/interfaces';
 import { MainState, AppNotification } from './state';
 import { getStoreAccessors } from 'typesafe-vuex';
@@ -22,6 +23,9 @@ import { State } from '../state';
 
 
 export const mutations = {
+    setDeleteStaticDisplayFrame(state: MainState, payload: IStaticDisplayFrameDeleteResponse) {
+        state.deleteStaticDisplayFrame = payload;
+    },
     setStaticDisplayDataList(state: MainState, payload: IGetStaticDisplayFrame[]) {
         state.getStaticDisplayFrameList = payload;
     },
@@ -127,3 +131,4 @@ export const commitUpdateDatabind = commit(mutations.setUpdateDatabind);
 export const commitSubscribedDataBindList = commit(mutations.setSubscribedDataBindList);
 export const commitRegisterStaticDisplayFrame = commit(mutations.setRegisterStaticDisplayFrame);
 export const commitGetStaticDisplayDataList = commit(mutations.setStaticDisplayDataList);
+export const commitDeleteStaticDisplayFrame = commit(mutations.setDeleteStaticDisplayFrame);
